@@ -1,0 +1,165 @@
+/* 진도 계획 시트 */
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--o-tint);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.colRight {
+  flex-shrink: 0;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.cap {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--o-dk);
+}
+
+.dday {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--o);
+}
+
+.pct {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+.todo {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--w);
+  text-align: left;
+}
+
+.box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--line4);
+  border-radius: 7px;
+  background: var(--w);
+  color: var(--w);
+}
+
+.boxOn {
+  border-color: var(--o);
+  background: var(--o);
+}
+
+.text {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--k);
+}
+
+.textDone {
+  color: var(--k5);
+}
+
+/* 작은 안내 글(자동 체크, 예시 기록). 시트의 칸 간격(16px)을 조금 좁혀 위 내용에 붙인다. */
+.hint {
+  margin-top: -6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--k3);
+}
+
+/* 학습 리마인드 토글 */
+.remind {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: left;
+}
+
+.remindLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--k);
+}
+
+.bell {
+  flex-shrink: 0;
+  color: var(--o);
+}
+
+.track {
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background: var(--line4);
+  transition: background 0.2s ease;
+}
+
+.trackOn {
+  background: var(--o);
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--w);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--k) 25%, transparent);
+  transition: left 0.2s ease;
+}
+
+.trackOn .knob {
+  left: 23px;
+}

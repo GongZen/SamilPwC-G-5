@@ -1,0 +1,42 @@
+.bar {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 6px 0 calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--w);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform 0.08s ease;
+}
+
+.tab:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  fill: none;
+}
+
+.on {
+  color: var(--o);
+  font-weight: 700;
+}
+
+.on .icon {
+  fill: var(--o-icon);
+}

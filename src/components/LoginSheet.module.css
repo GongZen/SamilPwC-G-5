@@ -1,0 +1,47 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lead {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--k3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--k2);
+}
+
+.input {
+  height: 50px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--k);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--o);
+  background: var(--w);
+}
+
+.input::placeholder {
+  color: var(--k4);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--k3);
+}

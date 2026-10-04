@@ -1,0 +1,276 @@
+/* 단계 학습 시트. 문제 영역만 스크롤하고 아래 버튼은 항상 보이게 둔다. */
+.head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k3);
+}
+
+.bar {
+  flex: 1;
+  height: 12px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--o);
+  transition: width 0.3s ease;
+}
+
+.count {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+/* 문제 영역. 화면이 낮으면 이 안에서 스크롤한다.
+   바깥 여백(-5px)은 보기 버튼의 초점 테두리가 잘리지 않게 하려는 것이다. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: -5px;
+  padding: 5px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chipSubject,
+.chipNode {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chipSubject {
+  background: var(--o-tint);
+  color: var(--o);
+}
+
+.chipNode {
+  background: var(--line2);
+  color: var(--k2);
+}
+
+.question {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.3px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-btn);
+  background: var(--w);
+  color: var(--k);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.no {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--line4);
+  border-radius: 8px;
+  background: var(--w);
+  color: var(--k3);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.optionText {
+  min-width: 0;
+}
+
+.optPicked {
+  border-color: var(--o);
+  background: var(--o-tint);
+}
+
+.optPicked .no {
+  border-color: var(--o);
+  background: var(--o);
+  color: var(--w);
+}
+
+.optRight {
+  border-color: var(--ok);
+  background: var(--ok-tint);
+}
+
+.optRight .no {
+  border-color: var(--ok);
+  background: var(--ok);
+  color: var(--w);
+}
+
+.optWrong {
+  border-color: var(--ng);
+  background: var(--ng-tint);
+}
+
+.optWrong .no {
+  border-color: var(--ng);
+  background: var(--ng);
+  color: var(--w);
+}
+
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--r-btn);
+}
+
+.feedbackTitle {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.feedbackText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 문항 출처(출처를 둔 과목만) */
+.source {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--k3);
+}
+
+.feedbackRight {
+  background: var(--ok-tint);
+}
+
+.feedbackRight .feedbackTitle {
+  color: var(--ok);
+}
+
+.feedbackRight .feedbackText {
+  color: var(--ok-text);
+}
+
+.feedbackWrong {
+  background: var(--ng-tint);
+}
+
+.feedbackWrong .feedbackTitle {
+  color: var(--ng);
+}
+
+.feedbackWrong .feedbackText {
+  color: var(--ng-text);
+}
+
+/* 입체 버튼의 아래 면(4px)이 잘리지 않게 아래 여백을 둔다 */
+.foot {
+  flex-shrink: 0;
+  padding-bottom: 4px;
+}
+
+/* 단계 완료 */
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 0 8px;
+  text-align: center;
+}
+
+.doneBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--o);
+  color: var(--w);
+  box-shadow:
+    0 6px 0 var(--o-dk),
+    0 0 0 10px var(--o-tint);
+}
+
+.doneStar {
+  fill: currentColor;
+}
+
+.doneTitle {
+  margin-top: 14px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.doneText {
+  font-size: 15px;
+  color: var(--k2);
+}
+
+.doneText b {
+  color: var(--o);
+}
+
+.doneStreak {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--o);
+}
+
+/* 모의고사 미리 풀어보기 결과 안내 */
+.doneNote {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.doneBtn {
+  margin-top: 12px;
+}

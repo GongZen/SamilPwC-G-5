@@ -1,0 +1,57 @@
+/* 앱 틀: 휴대폰에서는 화면 전체, PC에서는 가운데에 휴대폰 폭으로 보인다 */
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--w);
+  padding-top: env(safe-area-inset-top);
+}
+
+.surfaceBg {
+  background: var(--bg);
+}
+
+@media (min-width: 431px) {
+  .app {
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 12px 40px rgba(31, 26, 23, 0.08);
+  }
+}
+
+/* 맨 위 로고 줄 */
+.brand {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 20px;
+}
+
+.logo {
+  width: auto;
+  height: 16px;
+}
+
+/* 탭 화면이 들어가는 자리. 스크롤은 각 화면 안에서 한다 */
+.screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 아래에서 올라오는 시트(Sheet)가 그려지는 층 */
+.sheetRoot {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}

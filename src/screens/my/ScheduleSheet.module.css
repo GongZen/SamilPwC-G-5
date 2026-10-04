@@ -1,0 +1,132 @@
+/* 시험 일정 관리 시트. 카드와 칩 모양은 MY 시안을 따른다. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupTitle {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 내 시험 고르기(종합평가) */
+.exam {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--w);
+  color: var(--k);
+  text-align: left;
+}
+
+.examOn {
+  border-color: var(--o);
+  background: var(--o-soft);
+}
+
+.radio {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--line4);
+  border-radius: 50%;
+  background: var(--w);
+  color: var(--w);
+}
+
+.radioOn {
+  border-color: var(--o);
+  background: var(--o);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--k);
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.dday {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+  color: var(--k2);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.ddayOn {
+  background: var(--o-tint);
+  color: var(--o);
+}
+
+/* 모의고사, 아수(습)라장 한 줄(누르는 버튼이 아니라 보기만 한다) */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--w);
+}
+
+.status {
+  flex-shrink: 0;
+  max-width: 55%;
+  color: var(--o);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.statusDone {
+  color: var(--k3);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.note {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--k3);
+  font-size: 13px;
+}

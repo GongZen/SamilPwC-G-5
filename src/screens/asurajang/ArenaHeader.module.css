@@ -1,0 +1,87 @@
+/* 위에 앱 틀의 로고 줄이 있어서 시안보다 위 여백을 줄였다 */
+.header {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 64px;
+  align-items: center;
+  padding: 2px 12px 8px;
+}
+
+.exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--k);
+}
+
+.exit:active {
+  background: var(--line2);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  white-space: nowrap;
+}
+
+.art {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0 1px;
+  border: 1.5px solid var(--o);
+  border-radius: 50%;
+  color: var(--o);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--k3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 화면에는 안 보이고 화면 읽기 프로그램만 읽는 글자 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

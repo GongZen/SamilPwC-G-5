@@ -1,0 +1,62 @@
+/* 색과 모양의 공통 값. 화면 CSS에서는 색을 직접 쓰지 말고 이 변수를 쓴다.
+   값은 UI 디자인 시안을 따른다. 새 색이 필요하면 먼저 빌드 리드와 상의한다. */
+:root {
+  /* 오렌지 */
+  --o: #C2410C;        /* 주 버튼, 강조 글자 */
+  --o-dk: #9A3412;     /* 입체 버튼 아래 면, 진한 강조 */
+  --o-tint: #FFF1E8;   /* 옅은 오렌지 면 */
+  --o-line: #F5D7C4;   /* 오렌지 테두리 */
+  --o-soft: #FFF8F3;   /* 아주 옅은 오렌지 카드 면 */
+  --o-icon: #FFE4D3;   /* 선택된 탭 아이콘 면 */
+  --o-line2: #F5C9AE;  /* 말풍선, LIVE 테두리 */
+  --o-wait: #E8A27C;   /* 내일 열리는 학습 단계 */
+  --o-wait-dk: #C98863;
+  --flame: #F97316;    /* 연속 학습 불꽃 */
+  --amber: #F59E0B;
+
+  /* 바탕 */
+  --w: #FFFFFF;
+  --bg: #FAF7F5;       /* 옅은 회색 바탕 */
+
+  /* 글자 */
+  --k: #1F1A17;        /* 본문 */
+  --k2: #5C534D;       /* 진한 보조 */
+  --k3: #6E655F;       /* 보조 */
+  --k5: #8A817B;       /* 비활성 */
+  --k4: #A39890;       /* 흐린 글자, 잠김 */
+
+  /* 선과 면 */
+  --line: #EDE6E1;     /* 테두리, 구분선 */
+  --line2: #F3EEEA;    /* 옅은 구분선, 비활성 면 */
+  --line3: #E2DAD4;    /* 비활성 버튼 아래 면 */
+  --line4: #DCD3CD;    /* 꺼진 토글, 체크 상자 테두리 */
+  --line5: #F0E9E4;
+
+  /* 정답, 오답 */
+  --ok: #0F766E;
+  --ok-tint: #E6F4F1;
+  --ok-line: #B7DDD6;
+  --ok-text: #134E48;
+  --ng: #B42318;
+  --ng-tint: #FDECEA;
+  --ng-line: #F4C3BD;
+  --ng-text: #7A1A12;
+
+  /* LIVE 표시 */
+  --live: #DC2626;
+  --live-tint: #FDE2E2;
+
+  /* 그림자와 덮개 */
+  --dim: rgba(31, 26, 23, 0.45);
+  --pop-shadow: 0 12px 32px rgba(31, 26, 23, 0.14);
+
+  /* 모양 */
+  --r-btn: 14px;
+  --r-card: 14px;
+  --r-big: 18px;
+  --r-sheet: 24px;
+  --r-pill: 999px;
+
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
+}

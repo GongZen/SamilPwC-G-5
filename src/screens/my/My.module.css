@@ -1,0 +1,691 @@
+/* MY. 값은 UI 디자인 시안(My)을 따른다. 바탕은 옅은 회색(--bg)이고 앱 틀이 로고 줄도 같은 색으로 맞춘다. */
+.screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* 스크롤 영역. 시안처럼 스크롤 막대는 숨긴다.
+   position: relative는 설정 묶음까지 내려갈 때 위치(offsetTop)를 이 영역 기준으로 재기 위해 둔다. */
+.scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 16px 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 내용이 길어도 칸이 눌려 줄어들지 않게 한다(overflow: hidden인 칸은 그대로 두면 줄어든다) */
+.scroll > * {
+  flex-shrink: 0;
+}
+
+.muted {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.dot {
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* ---- 머리: 제목, 마스코트, 설정 버튼 ----
+   맨 위 로고 줄이 따로 있어서 위 여백은 시안(22px)보다 줄였다. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 4px 2px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* 마마쉘(높이 52px): 마스코트 배치판에서 정한 자리(393px 화면 기준 왼쪽 78px, 위 35px).
+   위아래 음수 여백으로 머리 줄 높이는 그대로 두어 아래 카드 위치가 바뀌지 않는다. */
+.mascot {
+  align-self: flex-start;
+  margin: -12px 0 -6px 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
+}
+
+.iconBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--k);
+}
+
+.iconBtn:active {
+  background: var(--line2);
+}
+
+/* ---- 프로필 ---- */
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-big);
+  background: var(--w);
+}
+
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--o-tint);
+  color: var(--o);
+}
+
+.who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 부서 · 연차. 부서가 길면 부서만 말줄임하고 연차는 남긴다 */
+.role {
+  display: flex;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.dept {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.year {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.streak {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.flame {
+  flex-shrink: 0;
+  color: var(--o);
+  fill: var(--flame);
+}
+
+.guestTitle {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.guestSub {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+/* ---- 시험 구분(1년차, 2년차) ---- */
+.seg {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-card);
+  background: var(--line5);
+}
+
+.segBtn {
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--k3);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.segOn {
+  background: var(--w);
+  color: var(--o);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--k) 12%, transparent);
+}
+
+/* ---- 시험 카드: D-day와 전체 진도 ---- */
+.exam {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: var(--r-big);
+  background: var(--o);
+  box-shadow: 0 5px 0 var(--o-dk);
+  color: var(--w);
+}
+
+.examTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.examText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.examName {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.92;
+}
+
+.dday {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.15;
+}
+
+.examDate {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--w) 18%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.overall {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.overallRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.overallTrack {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--w) 28%, transparent);
+}
+
+.overallFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--w);
+}
+
+/* ---- 흰 카드(과목별 진도, 저장한 암기법) ---- */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-big);
+  background: var(--w);
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* 과목 묶음(직업윤리, 실무역량) */
+.subjectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.subjectGroup + .subjectGroup {
+  padding-top: 14px;
+  border-top: 1px solid var(--line2);
+}
+
+.groupLabel {
+  margin-bottom: -4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+.subject {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 문항이 아직 없는 과목: 진도 막대 없이 '준비 중' */
+.subjectSoon .subjectName {
+  color: var(--k3);
+}
+
+.soonTag {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.subjectRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.subjectName {
+  flex-shrink: 0;
+  max-width: 50%;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 단원 이름 · 단계. 좁으면 단원 이름만 말줄임하고 단계 수는 남긴다 */
+.subjectMeta {
+  display: flex;
+  min-width: 0;
+  color: var(--k3);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.subjectUnit {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subjectCount {
+  flex-shrink: 0;
+}
+
+.bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--o);
+}
+
+/* ---- 내 활동 ---- */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionTitle {
+  margin: 4px 4px 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tile {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--w);
+  color: var(--k);
+  text-align: left;
+  transition: transform 0.08s ease;
+}
+
+.tile:active {
+  transform: scale(0.98);
+}
+
+.tileIcon {
+  flex-shrink: 0;
+  color: var(--o);
+}
+
+.tileLabel {
+  max-width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.tileValue {
+  max-width: 100%;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.tileUnit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.tileMeta {
+  max-width: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+/* '최고 기록' 다음 값은 한 덩어리로 줄바꿈한다 */
+.tileBest {
+  color: var(--o);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---- 저장한 암기법 ---- */
+.savedCard {
+  gap: 10px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* 보이는 높이는 시안대로 32px, 누르는 영역은 위아래로 늘려 44px */
+.more {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -6px -4px -6px 0;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--o);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.savedList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.savedList > li + li {
+  border-top: 1px solid var(--line2);
+}
+
+.savedItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--k);
+  text-align: left;
+}
+
+.keyChip {
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow: hidden;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.savedText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.savedTitle {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.savedSubject {
+  font-size: 12px;
+  color: var(--k3);
+}
+
+.savedEmpty {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0 2px;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--k2);
+}
+
+/* ---- 설정: 알림 토글, 시험 일정 관리, 공지사항, 로그아웃 ---- */
+.settings {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-big);
+  background: var(--w);
+}
+
+/* 줄 사이 구분선. 아래 버튼 공통 규칙(border: 0)보다 우선하도록 선택자를 구체적으로 쓴다 */
+.settings > button + button {
+  border-top: 1px solid var(--line2);
+}
+
+.toggle,
+.link,
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--w);
+  color: var(--k);
+  text-align: left;
+}
+
+.toggle:active,
+.link:active,
+.logout:active {
+  background: var(--bg);
+}
+
+.toggle {
+  min-height: 60px;
+}
+
+.link {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.logout {
+  justify-content: flex-start;
+  color: var(--k3);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.rowText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+}
+
+.rowTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--k);
+}
+
+.rowSub {
+  font-size: 12px;
+  color: var(--k3);
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--k4);
+}
+
+.track {
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background: var(--line4);
+  transition: background 0.2s ease;
+}
+
+.trackOn {
+  background: var(--o);
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--w);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--k) 25%, transparent);
+  transition: left 0.2s ease;
+}
+
+.trackOn .knob {
+  left: 23px;
+}

@@ -1,0 +1,410 @@
+/* 화면이 낮으면 타이머 원부터 줄어든다. 그래도 넘치면 이 영역 안에서 스크롤 */
+.wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 20px 0;
+}
+
+/* 생존자, 문제 번호, 진행 막대 */
+.board {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--o-tint);
+}
+
+.boardRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.statEnd {
+  align-items: flex-end;
+}
+
+.statLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--o-dk);
+}
+
+.survivors {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--o);
+  font-variant-numeric: tabular-nums;
+}
+
+.ofTotal {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.count {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+.bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--w);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--o);
+  transition: width 0.4s ease;
+}
+
+/* 타이머: 시안 크기(140px)가 기본이고, 높이가 모자라면 줄어든다 */
+.timerBox {
+  flex: 0 1 166px;
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0 10px;
+}
+
+.timerFit {
+  flex: 1;
+  min-height: 0;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  width: min(100cqh, 140px);
+  height: min(100cqh, 140px);
+}
+
+.ringSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+  stroke: var(--line2);
+  stroke-width: 12;
+}
+
+.progress {
+  fill: none;
+  stroke: var(--o);
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition:
+    stroke-dashoffset 0.2s linear,
+    stroke 0.2s ease;
+}
+
+/* 마감 직전(3초 이하) */
+.warn .progress {
+  stroke: var(--ng);
+}
+
+/* 시간이 다 되면 남은 점(둥근 끝)도 지운다 */
+.done .progress {
+  opacity: 0;
+}
+
+.ringText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sec {
+  font-size: 46px;
+  font-size: min(33cqh, 46px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--k);
+  font-variant-numeric: tabular-nums;
+}
+
+.secUnit {
+  font-size: 13px;
+  font-size: clamp(11px, 9.3cqh, 13px);
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.chip {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--k2);
+}
+
+.question {
+  flex-shrink: 0;
+  margin: 10px 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
+}
+
+.options {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 3px;
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 14px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--w);
+  box-shadow: 0 3px 0 var(--line);
+  color: var(--k);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.opt:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 transparent;
+}
+
+.no {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--line4);
+  border-radius: 8px;
+  background: var(--w);
+  color: var(--k3);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.optText {
+  min-width: 0;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+/* 고른 보기(정답 공개 전) */
+.picked {
+  border-color: var(--o);
+  background: var(--o-tint);
+  box-shadow: 0 3px 0 var(--o-line2);
+}
+
+.picked .no {
+  border-color: var(--o);
+  background: var(--o);
+  color: var(--w);
+}
+
+/* 정답 공개: 정답 보기 */
+.correct {
+  border-color: var(--ok);
+  background: var(--ok-tint);
+  box-shadow: 0 3px 0 var(--ok-line);
+}
+
+.correct .no {
+  border-color: var(--ok);
+  background: var(--ok);
+  color: var(--w);
+}
+
+/* 정답 공개: 내가 고른 오답 */
+.wrong {
+  border-color: var(--ng);
+  background: var(--ng-tint);
+  box-shadow: 0 3px 0 var(--ng-line);
+}
+
+.wrong .no {
+  border-color: var(--ng);
+  background: var(--ng);
+  color: var(--w);
+}
+
+.status {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--k3);
+  text-align: center;
+}
+
+.ok {
+  color: var(--ok);
+}
+
+.ng {
+  color: var(--ng);
+}
+
+.foot {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding: 12px 2px calc(18px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.foot span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* 낮은 화면(브라우저 주소창이 있는 휴대폰 등): 여백과 글자를 조금 줄인다 */
+@media (max-height: 740px) {
+  .board {
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .survivors {
+    font-size: 26px;
+  }
+
+  .count {
+    font-size: 22px;
+  }
+
+  .timerBox {
+    padding: 10px 0 8px;
+  }
+
+  .question {
+    margin: 8px 0 10px;
+    font-size: 17px;
+  }
+
+  .options {
+    gap: 8px;
+  }
+
+  .opt {
+    min-height: 48px;
+    padding: 6px 12px;
+  }
+
+  .status {
+    min-height: 30px;
+    padding-top: 8px;
+  }
+
+  .foot {
+    padding-top: 10px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-height: 640px) {
+  .timerBox {
+    min-height: 72px;
+  }
+
+  .survivors {
+    font-size: 24px;
+  }
+
+  .question {
+    font-size: 16px;
+  }
+
+  .opt {
+    min-height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* 아주 낮은 화면(작은 안드로이드 + 주소창): 결과 문구가 보이도록 아래 규칙 줄은 숨긴다(대기실 규칙에 같은 내용이 있다) */
+@media (max-height: 600px) {
+  .board {
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .survivors {
+    font-size: 22px;
+  }
+
+  .count {
+    font-size: 20px;
+  }
+
+  .question {
+    margin: 6px 0 8px;
+  }
+
+  .foot {
+    display: none;
+  }
+
+  .status {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

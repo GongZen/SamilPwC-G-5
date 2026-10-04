@@ -1,0 +1,207 @@
+/* 징검다리 학습 경로. 이 영역 안에서만 스크롤한다.
+   위아래 끝은 살짝 흐리게 해서, 스크롤할 때 단계가 칼로 자른 듯 잘려 보이지 않게 한다.
+   (마스크는 투명도만 쓰므로 색 변수는 아무거나 같다) */
+.path {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 0 12px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--k) 12px, var(--k) calc(100% - 12px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, var(--k) 12px, var(--k) calc(100% - 12px), transparent 100%);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 92px;
+  padding-right: 16px;
+}
+
+/* 지금 단계 위에는 말풍선 자리를 둔다 */
+.rowCurrent {
+  padding-top: 64px;
+}
+
+.pos0 {
+  padding-left: 104px;
+}
+
+.pos1 {
+  padding-left: 168px;
+}
+
+.pos2 {
+  padding-left: 112px;
+}
+
+.pos3 {
+  padding-left: 48px;
+}
+
+.pos4 {
+  padding-left: 112px;
+}
+
+.nodeWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* 단계 버튼(동그란 입체 버튼) */
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.nodeDone {
+  background: var(--o);
+  color: var(--w);
+  box-shadow: 0 6px 0 var(--o-dk);
+}
+
+/* 열 수 없는 단계(aria-disabled)는 눌러도 내려가지 않는다. 누르면 이유를 토스트로 알려 준다. */
+.nodeDone:active:not([aria-disabled='true']) {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 var(--o-dk);
+}
+
+.nodeCurrent {
+  width: 76px;
+  height: 76px;
+  background: var(--o);
+  color: var(--w);
+  box-shadow:
+    0 6px 0 var(--o-dk),
+    0 0 0 10px var(--o-tint);
+}
+
+.nodeCurrent:active:not([aria-disabled='true']) {
+  transform: translateY(6px);
+  box-shadow:
+    0 0 0 var(--o-dk),
+    0 0 0 10px var(--o-tint);
+}
+
+/* 오늘 이 과목을 끝내서 내일 열리는 단계(문항 준비 중인 단계도 같은 모양) */
+.nodeWaiting {
+  background: var(--o-wait);
+  box-shadow:
+    0 6px 0 var(--o-wait-dk),
+    0 0 0 10px var(--o-tint);
+}
+
+.nodeLocked {
+  background: var(--line2);
+  color: var(--k4);
+  box-shadow: 0 6px 0 var(--line3);
+}
+
+.star {
+  fill: currentColor;
+}
+
+/* 지금 단계 위 안내 */
+.bubble {
+  position: absolute;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border: 2px solid var(--o-line2);
+  border-radius: 12px;
+  background: var(--w);
+  box-shadow: 0 3px 0 var(--o-line2);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bubbleLabel {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--o);
+}
+
+.bubbleTip {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+/* 단계 옆 이름 */
+.side {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--k2);
+}
+
+.sideLocked {
+  color: var(--k5);
+}
+
+/* 마마쉘 자리(마스코트 배치판에서 정한 값, 393px 화면 기준): 왼쪽 248px, 단계 버튼 윗변보다 44px 위, 높이 78px.
+   지금 단계 줄은 위에 말풍선 자리(64px)가 있어서 top이 다르다. 모두 끝낸 마지막 줄은 단계 이름을 가리지 않게 조금 더 올린다.
+   단계 버튼이 오른쪽에 있는 줄(pos1)은 버튼과 겹치지 않게 더 오른쪽에 둔다. 좁은 화면에서도 오른쪽 끝을 넘지 않는다(91px = 마마쉘 폭). */
+.mascot {
+  position: absolute;
+  z-index: 1;
+  top: -44px;
+  left: min(248px, calc(100% - 91px - 12px));
+}
+
+.rowCurrent .mascot {
+  top: 20px;
+}
+
+.pos1 .mascot {
+  left: min(270px, calc(100% - 91px - 12px));
+}
+
+/* 문항이 아직 없는 과목: 단계 대신 가운데 안내 */
+.pathSoon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 20px 32px;
+  text-align: center;
+}
+
+.soonTitle {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+.soonSub {
+  font-size: 14px;
+  color: var(--k3);
+}

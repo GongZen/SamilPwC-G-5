@@ -1,0 +1,113 @@
+/* 오답노트 시트. 제목은 고정하고 목록만 스크롤한다. */
+.head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.count {
+  color: var(--o);
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k3);
+}
+
+.list {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.item {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 시연용 예시 오답 표시 */
+.sample {
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.q {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.mine {
+  font-size: 13px;
+  color: var(--ng);
+}
+
+.ans {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.ex {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--k2);
+}
+
+.clear {
+  align-self: flex-end;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--o-line);
+  border-radius: 10px;
+  background: var(--o-soft);
+  color: var(--o);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--k3);
+}

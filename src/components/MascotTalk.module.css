@@ -1,0 +1,163 @@
+/* 마스코트 상자. 화면 쪽 클래스가 position 등으로 자리를 정한다 */
+.wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* 마스코트 그림 자체가 버튼이다. 그림 크기 그대로 누를 수 있다 */
+.btn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transition: transform 0.12s ease;
+}
+
+.btn:active {
+  transform: scale(0.94);
+}
+
+/* 화면 읽기 프로그램에만 들리는 글자 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 말풍선 기준 상자: 앱 틀 맨 위 층(#sheet-root)에서 마스코트와 같은 자리, 같은 크기로 놓인다 */
+.anchor {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 말풍선. 그림을 가리지 않게 옆에 뜬다. --room: 앱 틀 안에서 쓸 수 있는 폭(누를 때 잰다) */
+.bubble {
+  position: absolute;
+  width: max-content;
+  max-width: min(220px, var(--room, 220px));
+  padding: 9px 13px;
+  border: 2px solid var(--o-line2);
+  border-radius: 14px;
+  background: var(--w);
+  box-shadow:
+    0 3px 0 var(--o-line2),
+    var(--pop-shadow);
+  color: var(--k);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  overflow-wrap: anywhere;
+  animation: pop 0.18s ease-out;
+}
+
+/* 말풍선 꼬리: 테두리 두 변만 있는 작은 정사각형을 45도 돌려 말풍선 가장자리에 반쯤 겹친다 */
+.bubble::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--o-line2);
+  background: var(--w);
+  transform: rotate(45deg);
+}
+
+/* ---- 위 ---- */
+.top {
+  bottom: calc(100% + 10px);
+}
+
+.top::after {
+  top: calc(100% - 5px);
+  border-top: 0;
+  border-left: 0;
+}
+
+/* ---- 아래 ---- */
+.bottom {
+  top: calc(100% + 10px);
+}
+
+.bottom::after {
+  bottom: calc(100% - 5px);
+  border-right: 0;
+  border-bottom: 0;
+}
+
+/* 위아래 말풍선의 가로 맞춤. 꼬리는 늘 마스코트 가운데를 가리킨다(--mw: 마스코트 폭) */
+.top.align-center,
+.bottom.align-center {
+  left: 50%;
+  translate: -50% 0;
+}
+
+.top.align-center::after,
+.bottom.align-center::after {
+  left: calc(50% - 5px);
+}
+
+.top.align-start,
+.bottom.align-start {
+  left: 0;
+}
+
+.top.align-start::after,
+.bottom.align-start::after {
+  left: calc(var(--mw) / 2 - 7px);
+}
+
+.top.align-end,
+.bottom.align-end {
+  right: 0;
+}
+
+.top.align-end::after,
+.bottom.align-end::after {
+  right: calc(var(--mw) / 2 - 7px);
+}
+
+/* ---- 오른쪽, 왼쪽(세로 가운데) ---- */
+.right,
+.left {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.right {
+  left: calc(100% + 10px);
+}
+
+.right::after {
+  top: calc(50% - 5px);
+  left: -5px;
+  border-top: 0;
+  border-right: 0;
+}
+
+.left {
+  right: calc(100% + 10px);
+}
+
+.left::after {
+  top: calc(50% - 5px);
+  right: -5px;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0.92;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}

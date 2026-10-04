@@ -1,0 +1,313 @@
+/* ---- 맨 위 큰 카드(추천순 1위 또는 최신 글) ---- */
+.top {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 14px;
+  border-radius: 20px;
+  background: var(--o);
+  box-shadow: 0 5px 0 var(--o-dk);
+  color: var(--w);
+}
+
+.topHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--w);
+  color: var(--o);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.crown {
+  flex-shrink: 0;
+  fill: var(--amber);
+  color: var(--o);
+}
+
+.topSubject {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topTitleBox {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topTitle {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+
+.topDesc {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.keyBoxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.keyItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.keyBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 54px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--w);
+  box-shadow: 0 3px 0 var(--o-dk);
+  color: var(--o);
+  font-size: 26px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.keyCap {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.95;
+  white-space: nowrap;
+}
+
+/* 폭 360 안팎의 휴대폰에서도 키워드 5칸이 한 줄에 들어가게 칸을 조금 줄인다 */
+@media (max-width: 374px) {
+  .keyBoxes {
+    gap: 6px;
+  }
+
+  .keyBox {
+    min-width: 48px;
+    height: 50px;
+    font-size: 24px;
+  }
+}
+
+.topLine {
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.topFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--w) 30%, transparent);
+}
+
+.author {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+}
+
+.topBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--w);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.topIcon {
+  flex-shrink: 0;
+  fill: none;
+}
+
+.on .topIcon {
+  fill: var(--w);
+}
+
+/* ---- 2위부터의 목록 카드 ---- */
+.item {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 12px 14px 16px;
+  border: 1.5px solid var(--o-line);
+  border-radius: 16px;
+  background: var(--w);
+  transition: transform 0.08s ease;
+}
+
+.item:has(.cover:active) {
+  transform: scale(0.985);
+}
+
+/* 카드를 눌러 크게 보기. 카드 전체를 덮는다 */
+.cover {
+  position: absolute;
+  inset: -1.5px;
+  z-index: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.cover:active {
+  background: color-mix(in srgb, var(--o) 5%, transparent);
+}
+
+.rank {
+  flex-shrink: 0;
+  min-width: 22px;
+  color: var(--o);
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 2px;
+}
+
+.title {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.subject {
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.desc {
+  color: var(--k2);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.miniKeys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 3px 0 0;
+  list-style: none;
+}
+
+.miniKey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 7px;
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* 추천 버튼은 카드를 덮는 버튼 위에 올라와 따로 눌린다 */
+.like {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 48px;
+  min-height: 52px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--w);
+  color: var(--o);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.likeOn {
+  background: var(--o-tint);
+}
+
+.likeIcon {
+  fill: none;
+}
+
+.likeOn .likeIcon {
+  fill: var(--o);
+}

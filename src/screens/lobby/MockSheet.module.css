@@ -1,0 +1,129 @@
+/* 모의고사 회차 시트 */
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-card);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--k3);
+}
+
+.scoreBox {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+/* 시연용 예시 점수 표시 */
+.sample {
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 오늘 열리는 회차 */
+.today {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid var(--o);
+  border-radius: var(--r-card);
+  background: var(--o-soft);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pill {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o);
+  color: var(--w);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.alert {
+  min-height: 50px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--o);
+  color: var(--w);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* 알림을 켠 뒤: 흰 면. 옅은 오렌지 카드 위에서 버튼 경계가 보이도록 옅은 테두리를 더했다. */
+.alertOn {
+  background: var(--w);
+  color: var(--o);
+  box-shadow: inset 0 0 0 1.5px var(--o-line);
+}
+
+/* 미리 풀어보기: 알림 버튼보다 한 단계 약한 글자 버튼 */
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 44px;
+  margin-top: -4px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--o);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.preview:active {
+  background: var(--o-tint);
+}
+
+/* 예정 회차 */
+.upcoming {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.upcoming .title {
+  color: var(--k3);
+}

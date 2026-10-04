@@ -1,0 +1,351 @@
+/* 삼일 끝내기(로비). 값은 UI 디자인 시안(Main)을 따른다. */
+.screen {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty {
+  margin: auto;
+  font-size: 15px;
+  color: var(--k3);
+}
+
+/* 화면 읽기 프로그램에만 들리는 글자 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 머리: 과목 선택, 연속 학습일, D-day.
+   맨 위 로고 줄이 따로 있어서 위 여백은 시안(18px)보다 줄였다.
+   왼쪽은 과목 버튼의 안쪽 여백(4px)을 더해 로고와 같은 선(20px)에 맞춘다. */
+.head {
+  position: relative;
+  z-index: 20;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 20px 12px 16px;
+}
+
+.subjectBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--k);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.subjectName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bookIcon {
+  flex-shrink: 0;
+  color: var(--o);
+}
+
+.chev {
+  flex-shrink: 0;
+  color: var(--k3);
+}
+
+.stats {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.streak {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--o);
+}
+
+.flame {
+  color: var(--o);
+  fill: var(--flame);
+}
+
+.dday {
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* 과목 선택 드롭다운. 낮은 화면에서는 메뉴 안에서 스크롤한다 */
+.menu {
+  position: absolute;
+  top: calc(100% - 8px);
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 240px;
+  max-width: calc(100% - 32px);
+  max-height: calc(100dvh - 160px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--w);
+  box-shadow: var(--pop-shadow);
+}
+
+/* 과목 묶음(직업윤리, 실무역량). 묶음 사이에 선을 긋는다 */
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menuGroup + .menuGroup {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.menuGroupLabel {
+  padding: 4px 12px 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--w);
+  text-align: left;
+}
+
+.menuItemOn {
+  background: var(--o-tint);
+}
+
+.menuName {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--k);
+}
+
+/* 문항이 아직 없는 과목 */
+.menuNameSoon {
+  color: var(--k3);
+}
+
+.menuSoon {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+  color: var(--k3);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.menuCheck {
+  flex-shrink: 0;
+  color: var(--o);
+}
+
+/* 고른 연차의 과목이 아직 없을 때 메뉴 아래 안내 */
+.menuNote {
+  padding: 8px 12px 4px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--k3);
+}
+
+/* 메뉴 바깥을 누르면 닫히게 하는 투명한 층 */
+.menuDim {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* 단원 카드. 아래 여백 5px은 입체 면(그림자) 자리다. 학습 경로가 그 위를 덮지 않게 한다. */
+.unit {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 16px 5px;
+  padding: 18px 18px 18px 20px;
+  border-radius: var(--r-big);
+  background: var(--o);
+  box-shadow: 0 5px 0 var(--o-dk);
+  color: var(--w);
+}
+
+.unitText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.unitLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.unitTitle {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.unitSub {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.92;
+}
+
+.unitProg {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 56px;
+  height: 56px;
+  border: 1.5px solid color-mix(in srgb, var(--w) 55%, transparent);
+  border-radius: var(--r-btn);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 준비 중인 과목의 단원 카드 오른쪽 칸 */
+.unitSoon {
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 아래 카드 3개: 모의고사, 오답노트, 진도 계획 */
+.quick {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px 16px 14px;
+}
+
+.qcard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  min-height: 96px;
+  padding: 12px;
+  border: 1.5px solid var(--o-line);
+  border-radius: var(--r-card);
+  background: var(--o-soft);
+  text-align: left;
+  transition: transform 0.08s ease;
+}
+
+.qcard:active {
+  transform: scale(0.97);
+}
+
+.qicon {
+  flex-shrink: 0;
+  color: var(--o);
+}
+
+.qtitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+.qsub {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--k3);
+}
+
+.qsub b {
+  color: var(--o);
+}
+
+/* 토스트: 아래 카드 위에 잠깐 겹쳐 보인다. 누르는 것은 막지 않는다(삼초컷 토스트와 같은 모양). */
+.toastLayer {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 22px;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast {
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--r-card);
+  background: var(--k);
+  color: var(--w);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+  animation: toast-in 0.2s ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,42 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--r-btn);
+  font-size: 17px;
+  font-weight: 800;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.primary {
+  background: var(--o);
+  color: var(--w);
+  box-shadow: 0 4px 0 var(--o-dk);
+}
+
+.soft {
+  background: var(--o-soft);
+  color: var(--o);
+  border: 1.5px solid var(--o-line);
+  box-shadow: 0 4px 0 var(--o-line);
+}
+
+/* 누르면 아래 면만큼 내려간다 */
+.btn:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 transparent;
+}
+
+.btn:disabled {
+  background: var(--line2);
+  color: var(--k5);
+  border-color: transparent;
+  box-shadow: 0 4px 0 var(--line3);
+}

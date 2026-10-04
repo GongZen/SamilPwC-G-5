@@ -1,0 +1,35 @@
+/* 공지사항 시트 */
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px 0;
+}
+
+.item + .item {
+  border-top: 1px solid var(--line2);
+}
+
+.item:first-child {
+  padding-top: 2px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--k3);
+}
