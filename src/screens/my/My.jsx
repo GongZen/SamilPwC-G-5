@@ -26,7 +26,6 @@ import s from './My.module.css'
 const tabLabel = (id) => TABS.find((t) => t.id === id)?.label ?? ''
 const TITLE = tabLabel('my')
 const ARENA = tabLabel('asurajang')
-const SAMCHOCUT = tabLabel('samchocut')
 const YEARS = Object.keys(EXAMS)
   .map(Number)
   .sort((a, b) => a - b)
@@ -348,7 +347,6 @@ export default function My({ goTo }) {
           ) : (
             <div className={s.savedEmpty}>
               <p className={s.emptyTitle}>아직 저장한 암기법이 없어요</p>
-              <p className={s.muted}>{SAMCHOCUT}에서 마음에 드는 암기법을 저장해 보세요</p>
             </div>
           )}
         </section>
