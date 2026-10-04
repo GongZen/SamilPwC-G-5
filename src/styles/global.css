@@ -10,6 +10,19 @@
   color-scheme: only light;
 }
 
+/* 삼성 인터넷처럼 '다크 모드용 스타일이 없는 사이트'만 강제로 뒤집는 브라우저를 위해,
+   다크 모드 조건에서도 같은 밝은 색을 쓰라고 한 번 더 적어 둔다(색은 바꾸지 않는다) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: only light;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--k);
+  }
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
