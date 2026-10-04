@@ -6,7 +6,8 @@ import s from './ScheduleSheet.module.css'
 // 시험 일정 관리: 내 시험(연차) 고르기, 모의고사 회차, 아수(습)라장 일정을 한곳에서 본다.
 // 디자인에는 이 시트가 없어서 MY 시안의 카드 모양에 맞춰 임시로 만들었다.
 // 날짜와 회차는 시연용 가상 값이다(config.js의 EXAMS, 각 기능의 data 파일).
-export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, arenaLabel, onClose }) {
+// onStartMock(회차 id): 아직 안 푼 회차의 '응시하기'를 누르면 이 시트를 닫고 바로 모의고사를 연다
+export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, arenaLabel, onStartMock, onClose }) {
   return (
     <Sheet open onClose={onClose} title="시험 일정 관리">
       <section className={s.group}>
@@ -46,16 +47,19 @@ export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, a
               const info = [m.questions > 0 && `${m.questions}문항`, m.minutes > 0 && `${m.minutes}분`]
                 .filter(Boolean)
                 .join(' · ')
-              let status = '언제든 응시'
-              if (m.done) status = m.score !== null ? `응시 완료 · ${m.score}점` : '응시 완료'
+              const status = m.score !== null ? `응시 완료 · ${m.score}점` : '응시 완료'
               return (
                 <li key={m.id} className={s.row}>
                   <span className={s.text}>
                     <span className={s.title}>{m.title}</span>
                     {info && <span className={s.sub}>{info}</span>}
                   </span>
-                  {status && (
-                    <span className={m.done ? `${s.status} ${s.statusDone}` : s.status}>{status}</span>
+                  {m.done ? (
+                    <span className={`${s.status} ${s.statusDone}`}>{status}</span>
+                  ) : (
+                    <button type="button" className={s.startBtn} onClick={() => onStartMock?.(m.id)}>
+                      응시하기
+                    </button>
                   )}
                 </li>
               )

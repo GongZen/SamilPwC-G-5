@@ -14,8 +14,9 @@ import { useUser } from '../../store/UserContext.jsx'
 import { getExam, getSettings, setSetting } from '../../store/user.js'
 import Button3D from '../../components/Button3D.jsx'
 import MascotTalk from '../../components/MascotTalk.jsx'
-import { getMockExams, getMockLesson } from '../../store/lobby.js'
+import { getMockExams, getMockLesson, getWrongNotes, removeWrongNote } from '../../store/lobby.js'
 import MockSheet from '../lobby/MockSheet.jsx'
+import WrongNoteSheet from '../lobby/WrongNoteSheet.jsx'
 import LessonSheet from '../lobby/LessonSheet.jsx'
 import ScheduleSheet from './ScheduleSheet.jsx'
 import NoticeSheet from './NoticeSheet.jsx'
@@ -61,7 +62,7 @@ function scrollBehavior() {
 // 다른 기능의 값은 myData.js가 store에서 읽어 다듬는다. 설정을 바꾸면 refresh()로 다시 그린다.
 export default function My({ goTo }) {
   const { user, requireLogin, logout } = useUser()
-  const [sheet, setSheet] = useState(null) // 'schedule' | 'notice' | 'mock'
+  const [sheet, setSheet] = useState(null) // 'schedule' | 'notice' | 'mock' | 'wrong'(오답노트도 MY 위에서 연다)
   // MY에서 바로 푸는 모의고사(삼일 끝내기와 같은 시트를 MY 위에 연다). 열 때마다 새로 그리려고 run을 올린다
   const [lesson, setLesson] = useState(null)
   const [lessonRun, setLessonRun] = useState(0)
@@ -127,6 +128,12 @@ export default function My({ goTo }) {
 
   const closeLesson = () => {
     setLesson(null)
+    refresh()
+  }
+
+  // 오답노트에서 '복습 완료'를 누르면 지우고 MY 값(오답 수)을 다시 읽는다
+  const clearWrong = (id) => {
+    removeWrongNote(id)
     refresh()
   }
 
@@ -274,7 +281,7 @@ export default function My({ goTo }) {
         <section className={s.section}>
           <h2 className={s.sectionTitle}>내 활동</h2>
           <div className={s.grid}>
-            <button type="button" className={s.tile} onClick={() => go('lobby', { sheet: 'wrong' })}>
+            <button type="button" className={s.tile} onClick={() => setSheet('wrong')}>
               <NotebookPen size={22} strokeWidth={2} className={s.tileIcon} aria-hidden="true" />
               <span className={s.tileLabel}>오답노트</span>
               <span className={s.tileValue}>
@@ -381,6 +388,7 @@ export default function My({ goTo }) {
           exams={YEARS.map((y) => getExam(y))}
           year={year}
           onPickYear={pickYear}
+          onStartMock={startMock}
           mocks={data.mocks}
           arena={data.arena}
           arenaLabel={ARENA}
@@ -391,6 +399,8 @@ export default function My({ goTo }) {
       {sheet === 'notice' && <NoticeSheet onClose={() => setSheet(null)} />}
 
       {sheet === 'mock' && <MockSheet exams={getMockExams()} onStart={startMock} onClose={() => setSheet(null)} />}
+
+      {sheet === 'wrong' && <WrongNoteSheet notes={getWrongNotes()} onClear={clearWrong} onClose={() => setSheet(null)} />}
 
       {lesson && (
         <LessonSheet
