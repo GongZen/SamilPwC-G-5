@@ -1,4 +1,4 @@
-import { CircleX, EyeOff, Gift, Users } from 'lucide-react'
+import { Users } from 'lucide-react'
 import { WARN_SECONDS, elapsedRatio, secondsLeft } from './game.js'
 import { fmt } from './format.js'
 import s from './QuizPlay.module.css'
@@ -7,8 +7,9 @@ const RADIUS = 60
 const RING = 2 * Math.PI * RADIUS // 타이머 원 둘레
 
 // 문제 풀이: 고르기 전, 답안 제출 후 대기, 마감 직전, 정답 공개(생존, 오답, 시간 초과)
+// 선택지 아래에는 화면에 보이는 문구를 두지 않는다. 진행 상황은 화면 읽기 프로그램에만 알린다.
 export default function QuizPlay({ game, round, onPick }) {
-  const { config, questions } = round
+  const { questions } = round
   const item = questions[game.qi]
   const total = questions.length
   const left = secondsLeft(game, round)
@@ -17,13 +18,10 @@ export default function QuizPlay({ game, round, onPick }) {
   const locked = game.picked !== null || game.revealed
 
   let status = '정답이라고 생각하는 보기를 고르세요'
-  let tone = ''
   if (game.revealed && game.right) {
     status = `생존! ${fmt(game.prev)}명 중 ${fmt(game.survivors)}명 통과`
-    tone = s.ok
   } else if (game.revealed) {
     status = game.picked === null ? '시간 초과 · 탈락' : '오답 · 탈락'
-    tone = s.ng
   } else if (game.picked !== null) {
     status = '답안 제출 완료 · 다른 참가자를 기다리는 중'
   }
@@ -106,26 +104,9 @@ export default function QuizPlay({ game, round, onPick }) {
         ))}
       </div>
 
-      <p className={`${s.status} ${tone}`} role="status">
+      <p className={s.srOnly} role="status">
         {status}
       </p>
-
-      <div className={s.foot}>
-        <span>
-          <CircleX size={14} strokeWidth={2} aria-hidden="true" />
-          틀리면 탈락
-        </span>
-        {config.leaveEliminates && (
-          <span>
-            <EyeOff size={14} strokeWidth={2} aria-hidden="true" />
-            화면 이탈 시 탈락
-          </span>
-        )}
-        <span>
-          <Gift size={14} strokeWidth={2} aria-hidden="true" />
-          최후 1인 경품
-        </span>
-      </div>
     </div>
   )
 }
