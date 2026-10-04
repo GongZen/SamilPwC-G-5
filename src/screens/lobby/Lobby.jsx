@@ -173,10 +173,9 @@ export default function Lobby({ entry }) {
             <span>{progress.streak}</span>
             <span className={s.srOnly}>일</span>
           </p>
-          <p className={s.dday}>
-            <span className={s.srOnly}>{exam.name}까지 </span>
-            {exam.dday}
-          </p>
+          {/* 어떤 시험의 D-day인지 함께 보여 준다. 폭이 모자라면(2년차 등) 시험 이름 끝을 줄인다 */}
+          <p className={s.examName}>{exam.name}까지</p>
+          <p className={s.dday}>{exam.dday}</p>
         </div>
 
         {/* 과목 메뉴: 묶음(직업윤리, 실무역량)별로 보여 준다. 문항이 없는 과목도 고를 수 있고 '준비 중'으로 표시한다.

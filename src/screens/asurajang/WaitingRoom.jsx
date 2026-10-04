@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CircleX, EyeOff, Gift, Info, Users } from 'lucide-react'
+import { CircleX, EyeOff, Gift, Users } from 'lucide-react'
 import Button3D from '../../components/Button3D.jsx'
 import MascotTalk from '../../components/MascotTalk.jsx'
 import RollingNumber from './RollingNumber.jsx'
@@ -92,8 +92,8 @@ export default function WaitingRoom({ round, onEnter }) {
 
       {/* 낮은 화면에서는 규칙 목록만 스크롤한다 */}
       <div className={s.scroll}>
-        <section className={s.rules}>
-          <h2 className={s.rulesTitle}>서바이벌 규칙</h2>
+        {/* 규칙 제목은 화면에 쓰지 않는다(화면 읽기 프로그램용 이름만). 가상 참가자 안내는 MY 공지사항에 있다 */}
+        <section className={s.rules} aria-label="서바이벌 규칙">
           <ul className={s.ruleList}>
             {rules.map(({ key, badge, Icon, text }) => (
               <li key={key} className={s.rule}>
@@ -104,10 +104,6 @@ export default function WaitingRoom({ round, onEnter }) {
               </li>
             ))}
           </ul>
-          <p className={s.notice}>
-            <Info size={15} strokeWidth={2} aria-hidden="true" />
-            가상 참가자와 함께 진행하는 시연용 퀴즈예요
-          </p>
         </section>
       </div>
 
