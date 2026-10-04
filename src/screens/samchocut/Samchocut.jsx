@@ -1,6 +1,6 @@
 import { useEffect, useId, useReducer, useRef, useState } from 'react'
 import { PenLine, Search } from 'lucide-react'
-import { TABS } from '../../config.js'
+import { SUBJECTS as SUBJECT_LIST, TABS } from '../../config.js'
 import { useUser } from '../../store/UserContext.jsx'
 import { addPost, getPost, getSubjects, listPosts, toggleLike, toggleSave } from '../../store/samchocut.js'
 import MascotTalk from '../../components/MascotTalk.jsx'
@@ -19,6 +19,8 @@ const SORTS = [
 const TOAST_MS = 2600
 // 조이를 누르면 하는 말(누를 때마다 차례로)
 const JOY_LINES = ['3일도 길어요! 3초면 외우죠!']
+// 공유 시트에서 처음 골라져 있는 과목(시연 과목인 정보기술)
+const SHARE_DEFAULT = SUBJECT_LIST.find((x) => x.id === 'it')?.name ?? ''
 
 // 삼초컷: 선배들의 암기법 목록. 추천순·최신순 정렬, 과목 필터, 검색, 추천·저장, 내 암기법 공유.
 // 목록의 글을 누르면 크게 보기 시트가 열린다. entry.post(글 id)가 있으면 그 글을 연 채로 시작한다(MY의 저장한 암기법).
@@ -132,7 +134,7 @@ export default function Samchocut({ entry }) {
               aria-label="암기법 검색어"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="주제나 키워드 (예: 감사위험)"
+              placeholder="주제나 키워드 (예: 개발단계)"
               autoComplete="off"
               autoFocus
             />
@@ -201,6 +203,7 @@ export default function Samchocut({ entry }) {
       <ShareSheet
         open={shareOpen}
         subjects={SUBJECTS}
+        defaultSubject={SHARE_DEFAULT}
         onClose={() => setShareOpen(false)}
         onSubmit={share}
       />

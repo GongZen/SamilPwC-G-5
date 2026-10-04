@@ -6,12 +6,11 @@ import s from './WaitingRoom.module.css'
 
 // 마스코트를 누르면 하는 말(누를 때마다 차례로)
 const JOY_LINES = ['공부 좀 했어요?']
-const MAMASHELL_LINES = ['동기들 이겨보자구요!']
+const MAMASHELL_LINES = ['동기들 이겨 보자고요!']
 
 // 대기실: 회차 소개, 서바이벌 규칙, 입장하기
 export default function WaitingRoom({ round, onEnter }) {
   const { config } = round
-  const total = round.questions.length
 
   const rules = [
     {
@@ -32,22 +31,12 @@ export default function WaitingRoom({ round, onEnter }) {
     <div className={s.wrap}>
       <div className={s.scroll}>
         <section className={s.hero}>
-          {/* 조이와 마마쉘은 맨 위 카드 안, 제목 오른쪽에 나란히 둔다(마스코트 배치판에서 정한 자리).
-              화면 높이와 상관없이 처음부터 보인다 */}
+          {/* 위 줄은 조이와 마마쉘 자리를 비워 둔다(마스코트는 아래 .mascots에서 스크롤 밖에 고정).
+              제목은 그 아래에 카드 폭 전체로 한 줄 */}
           <div className={s.heroTop}>
-            <div className={s.heroText}>
-              {round.tagline && <span className={s.tagline}>{round.tagline}</span>}
-              {round.title && <h2 className={s.heroTitle}>{round.title}</h2>}
-            </div>
-            <div className={s.mascots}>
-              <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
-              <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
-            </div>
+            {round.tagline && <span className={s.tagline}>{round.tagline}</span>}
           </div>
-          <p className={s.heroDesc}>
-            {round.subjectsLabel ? `${round.subjectsLabel} ` : ''}
-            {total}문제 · 끝까지 살아남으면 경품
-          </p>
+          {round.title && <h2 className={s.heroTitle}>{round.title}</h2>}
           <p className={s.waiting}>
             <Users size={20} strokeWidth={2} aria-hidden="true" />
             {fmt(config.maxParticipants)}명 입장 대기 중
@@ -71,6 +60,13 @@ export default function WaitingRoom({ round, onEnter }) {
             가상 참가자와 함께 진행하는 시연용 퀴즈예요
           </p>
         </section>
+      </div>
+
+      {/* 조이와 마마쉘: 마스코트 배치판에서 정한 자리(393x852 기준 조이 왼쪽 221, 위 130, 마마쉘은 조이 오른쪽).
+          스크롤 영역 밖에 두어 낮은 화면에서 카드를 스크롤해도 그 자리에 고정된다 */}
+      <div className={s.mascots}>
+        <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
+        <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
       </div>
 
       <div className={s.footer}>

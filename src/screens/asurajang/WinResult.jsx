@@ -1,9 +1,12 @@
 import { Crown } from 'lucide-react'
 import Button3D from '../../components/Button3D.jsx'
-import Mascot from '../../components/Mascot.jsx'
+import MascotTalk from '../../components/MascotTalk.jsx'
 import { speedRank } from './game.js'
 import { fmt } from './format.js'
 import s from './Result.module.css'
+
+// 조이를 누르면 하는 말
+const JOY_LINES = ['진짜 살아남았다구요?']
 
 // 최종 생존: 누적 응답 시간과 생존자 중 속도 순위
 export default function WinResult({ game, round, onHome, homeLabel }) {
@@ -16,7 +19,7 @@ export default function WinResult({ game, round, onHome, homeLabel }) {
         {/* 조이는 제목 오른쪽에 둔다(삼초컷 제목 줄과 같은 방식). 화면 높이와 상관없이 보인다 */}
         <div className={s.winHead}>
           <h2 className={s.winTitle}>끝까지 살아남았어요!</h2>
-          <Mascot name="joy" size={40} />
+          <MascotTalk name="joy" size={40} lines={JOY_LINES} side="top" align="end" />
         </div>
         <p className={s.sub}>
           {fmt(game.participants)}명 중 최종 생존자 <b className={s.em}>{fmt(game.survivors)}명</b>

@@ -7,8 +7,9 @@ import s from './ShareSheet.module.css'
 // '내 암기법 공유' 시트. 과목, 주제, 키워드, 한 줄 설명을 받는다.
 // 주제와 키워드를 넣어야 공유하기가 켜진다. 닫았다 다시 열면 쓰던 내용이 남아 있다.
 // onSubmit(값)이 true를 돌려주면(저장 성공) 입력란을 비운다.
-export default function ShareSheet({ open, subjects, onClose, onSubmit }) {
-  const [subject, setSubject] = useState(subjects[0] ?? '')
+// defaultSubject: 처음 골라져 있는 과목(목록에 없으면 첫 과목)
+export default function ShareSheet({ open, subjects, defaultSubject, onClose, onSubmit }) {
+  const [subject, setSubject] = useState(subjects.includes(defaultSubject) ? defaultSubject : (subjects[0] ?? ''))
   const [title, setTitle] = useState('')
   const [keysText, setKeysText] = useState('')
   const [line, setLine] = useState('')
