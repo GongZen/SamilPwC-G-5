@@ -79,7 +79,9 @@ export default function My({ goTo }) {
   const data = readMyData()
 
   const examLabel = exam.daysLeft >= 0 ? `${exam.name}까지` : `${exam.name} 이후`
-  const examDate = dateText(exam.date)
+  // 올해가 아닌 시험일(2년차 D-366 등)은 연도를 붙여 내일 날짜로 오해하지 않게 한다
+  const examDay = dateText(exam.date)
+  const examDate = examDay && !exam.sameYear ? `${String(exam.date).slice(0, 4)}년 ${examDay}` : examDay
   const [arenaValue, arenaUnit] = data.arena?.schedule ? splitSchedule(data.arena.schedule) : ['준비 중', '']
   const best = bestValue(data.best)
   const saved = data.saved.slice(0, SAVED_PREVIEW)

@@ -133,7 +133,8 @@ export default function Asurajang({ goTo, goBack }) {
 
   return (
     <div className={s.screen}>
-      <ArenaHeader subtitle={game.practice ? '연습 모드' : round?.subtitle} onExit={onExit} />
+      {/* 머리에는 기능 이름만 둔다. 연습 판일 때만 '연습 모드'를 밝힌다 */}
+      <ArenaHeader subtitle={game.practice ? '연습 모드' : ''} onExit={onExit} />
       {body}
       <Sheet open={askOpen} onClose={closeAsk} title="지금 나갈까요?" showClose={false}>
         <p className={s.askText}>

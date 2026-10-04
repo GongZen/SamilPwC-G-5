@@ -53,7 +53,9 @@ export function currentSubjectName(name) {
 }
 
 // 시험 일정은 시연용 가상 날짜다. 실제 시험 일정이 아니다.
+// 날짜는 접속한 날을 기준으로 daysFromToday일 뒤로 정한다. 언제 열어도 1년차는 D-1(시험 전날 여는 아수(습)라장과 맞춤),
+// 2년차는 D-366으로 보인다.
 export const EXAMS = {
-  1: { name: '기본실무과정 종합평가', short: '1년차 기본실무', date: '2026-10-27' },
-  2: { name: '외부감사실무과정 종합평가', short: '2년차 외부감사실무', date: '2026-11-17' },
+  1: { name: '기본실무과정 종합평가', short: '1년차 기본실무', daysFromToday: 1 },
+  2: { name: '외부감사실무과정 종합평가', short: '2년차 외부감사실무', daysFromToday: 366 },
 }
