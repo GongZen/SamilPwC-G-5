@@ -1,29 +1,20 @@
-/* 마스코트를 스크롤 밖에 고정하는 기준점 */
+/* 위: 배너 카드(고정), 가운데: 규칙 목록(스크롤), 아래: 입장하기 버튼(고정) */
 .wrap {
-  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-/* 입장하기 버튼은 아래에 고정하고, 나머지만 스크롤한다(낮은 화면 대비) */
-.scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 8px 20px 12px;
-}
-
+/* 배너 카드는 스크롤하지 않는다. 아래 입체 면(5px)이 규칙 목록 위에 보이도록 위에 그린다 */
 .hero {
+  position: relative;
+  z-index: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin: 8px 20px 0;
   padding: 24px 20px;
   border-radius: 20px;
   background: var(--o);
@@ -31,37 +22,45 @@
   color: var(--w);
 }
 
-/* 위 줄: 작은 제목(왼쪽 아래)과 마스코트 자리. 마스코트(카드 안쪽 위 10px부터 높이 64px)가 끝나는 74px까지 비워 둔다 */
+/* 위 줄: 왼쪽에 작은 제목과 큰 제목(카드 맨 위부터), 오른쪽에 조이와 마마쉘 */
 .heroTop {
   display: flex;
-  align-items: flex-end;
-  min-height: 74px;
-  padding-right: 150px;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-/* 조이와 마마쉘(높이 64px, 사이 4px). 머리(88px) 아래 42px = 화면 위 130px,
-   마마쉘 오른쪽 끝은 카드 안쪽 여백으로 8px 들어간 자리(393px 화면에서 조이 왼쪽 221px, 마마쉘 왼쪽 287px).
-   스크롤 영역 밖이라 카드를 스크롤해도 움직이지 않는다 */
+/* 큰 제목 글자 크기를 이 칸의 폭에 맞추려고 container로 둔다 */
+.heroText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  container-type: inline-size;
+}
+
+/* 조이와 마마쉘(높이 64px, 사이 4px): 카드 안쪽 위에서 10px 아래, 마마쉘 오른쪽 끝은 카드 안쪽 여백으로 8px 들어간다.
+   393px 화면에서 조이 왼쪽 221px·위 130px, 마마쉘 왼쪽 287px(마스코트 배치판 값). 카드가 고정이라 스크롤에 움직이지 않는다 */
 .mascots {
-  position: absolute;
-  top: 42px;
-  right: 32px;
-  z-index: 2;
+  flex-shrink: 0;
   display: flex;
   align-items: flex-end;
   gap: 4px;
+  margin: 10px -8px 0 0;
 }
 
 .tagline {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
+  white-space: nowrap;
   opacity: 0.9;
 }
 
-/* 큰 제목은 한 줄로 쓴다. 아주 좁은 화면에서만 글자를 줄인다(아래 미디어 쿼리) */
+/* 큰 제목은 한 줄. 마스코트에 닿지 않게 왼쪽 칸 폭에 맞춰 글자를 줄인다(26px일 때 폭이 글자 크기의 약 8.8배).
+   393px 화면에서는 약 19px */
 .heroTitle {
-  font-size: 26px;
+  font-size: min(26px, calc(100cqw / 8.9));
   font-weight: 800;
   line-height: 1.3;
   letter-spacing: -0.6px;
@@ -82,6 +81,17 @@
 
 .waiting svg {
   flex-shrink: 0;
+}
+
+/* 규칙 목록. 낮은 화면에서는 이 영역만 스크롤한다 */
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 12px;
 }
 
 .rules {
@@ -155,9 +165,9 @@
   padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
 }
 
-/* 폭 340px 이하에서는 제목이 한 줄에 들어가게 글자를 조금 줄인다(393px에서 26px 제목 폭은 229px) */
-@media (max-width: 340px) {
-  .heroTitle {
-    font-size: 22px;
+/* 폭이 좁은 휴대폰(374px 이하)에서는 큰 제목이 너무 작아지지 않게 두 마스코트를 조금 줄인다 */
+@media (max-width: 374px) {
+  .mascots {
+    zoom: 0.82;
   }
 }

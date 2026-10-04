@@ -29,20 +29,27 @@ export default function WaitingRoom({ round, onEnter }) {
 
   return (
     <div className={s.wrap}>
-      <div className={s.scroll}>
-        <section className={s.hero}>
-          {/* 위 줄은 조이와 마마쉘 자리를 비워 둔다(마스코트는 아래 .mascots에서 스크롤 밖에 고정).
-              제목은 그 아래에 카드 폭 전체로 한 줄 */}
-          <div className={s.heroTop}>
+      {/* 맨 위 배너 카드는 스크롤하지 않는다. 조이와 마마쉘도 카드 안 제자리에 고정된다(마스코트 배치판에서 정한 자리).
+          작은 제목과 큰 제목은 카드 왼쪽 위에 붙이고, 큰 제목은 마스코트에 닿지 않는 크기로 한 줄 */}
+      <section className={s.hero}>
+        <div className={s.heroTop}>
+          <div className={s.heroText}>
             {round.tagline && <span className={s.tagline}>{round.tagline}</span>}
+            {round.title && <h2 className={s.heroTitle}>{round.title}</h2>}
           </div>
-          {round.title && <h2 className={s.heroTitle}>{round.title}</h2>}
-          <p className={s.waiting}>
-            <Users size={20} strokeWidth={2} aria-hidden="true" />
-            {fmt(config.maxParticipants)}명 입장 대기 중
-          </p>
-        </section>
+          <div className={s.mascots}>
+            <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
+            <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
+          </div>
+        </div>
+        <p className={s.waiting}>
+          <Users size={20} strokeWidth={2} aria-hidden="true" />
+          {fmt(config.maxParticipants)}명 입장 대기 중
+        </p>
+      </section>
 
+      {/* 낮은 화면에서는 규칙 목록만 스크롤한다 */}
+      <div className={s.scroll}>
         <section className={s.rules}>
           <h2 className={s.rulesTitle}>서바이벌 규칙</h2>
           <ul className={s.ruleList}>
@@ -60,13 +67,6 @@ export default function WaitingRoom({ round, onEnter }) {
             가상 참가자와 함께 진행하는 시연용 퀴즈예요
           </p>
         </section>
-      </div>
-
-      {/* 조이와 마마쉘: 마스코트 배치판에서 정한 자리(393x852 기준 조이 왼쪽 221, 위 130, 마마쉘은 조이 오른쪽).
-          스크롤 영역 밖에 두어 낮은 화면에서 카드를 스크롤해도 그 자리에 고정된다 */}
-      <div className={s.mascots}>
-        <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
-        <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
       </div>
 
       <div className={s.footer}>
