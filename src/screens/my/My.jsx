@@ -360,8 +360,7 @@ export default function My({ goTo }) {
             onToggle={() => toggle('studyRemind')}
           />
           <Toggle
-            title={`${ARENA} 오픈 알림`}
-            sub="시험 D-1 서바이벌 시작 10분 전"
+            title={`${ARENA} 오픈 10분 전 알림`}
             on={Boolean(settings.asurajangAlert)}
             onToggle={() => toggle('asurajangAlert')}
           />
@@ -396,13 +395,13 @@ export default function My({ goTo }) {
   )
 }
 
-// 알림 켜고 끄기 한 줄
+// 알림 켜고 끄기 한 줄. sub(예: 매일 21:00)가 있으면 제목 바로 오른쪽에 작게 붙여 쓴다
 function Toggle({ title, sub, on, onToggle }) {
   return (
     <button type="button" className={s.toggle} role="switch" aria-checked={on} onClick={onToggle}>
       <span className={s.rowText}>
         <span className={s.rowTitle}>{title}</span>
-        <span className={s.rowSub}>{sub}</span>
+        {sub && <span className={s.rowSub}>{sub}</span>}
       </span>
       <span className={on ? `${s.track} ${s.trackOn}` : s.track} aria-hidden="true">
         <span className={s.knob} />
