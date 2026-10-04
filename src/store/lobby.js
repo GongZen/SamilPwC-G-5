@@ -15,13 +15,13 @@
 // - source: 과목 문항의 출처 표기(있는 과목만). 문항 해설 아래에 보여 준다
 //
 // 규칙
-// - 처음 접속하면 data/lobby.json의 seed(디자인과 같은 값: 연속 12일, 과목별 2/5, 오답 2개, 오늘 할 일 2/3)를 넣는다.
+// - 처음 접속하면 data/lobby.json의 seed(연속 12일, 오답 2개, 오늘 할 일 2/3)를 넣는다. 진도는 비워 두어 0%에서 시작한다.
 //   시연용 예시 기록이다. 예시 오답과 예시 점수에는 sample: true를 붙여 화면에 '예시'로 표시한다
 // - 단계마다 자기 문항만 쓴다. 문항이 없는 단계는 count가 0이고 열리지 않는다('문항 준비 중')
 // - 한 과목은 하루에 새 단계 하나만 연다. 끝내면 다음 단계는 '내일 학습 오픈'이 된다
 // - 이미 끝낸 단계는 언제든 다시 풀 수 있다(복습). 복습은 진도를 올리지 않는다
 // - 단계 진도(lobby.progress)와 '하루 한 단계' 기록(lobby.today)은 MY에서 고른 연차별로 따로 저장한다.
-//   1년차는 예전 키 그대로, 2년차는 키 끝에 '.y2'를 붙인다. 예시 진도는 1년차에만 넣고 2년차는 빈 상태로 시작한다.
+//   1년차는 예전 키 그대로, 2년차는 키 끝에 '.y2'를 붙인다. 두 연차 모두 진도 0%에서 시작한다(seed.progress에 값을 넣으면 1년차에만 들어간다).
 //   문항, 연속 학습일, 오답노트, 모의고사 점수, 진도 계획은 두 연차가 함께 쓴다
 // - 연속 학습일은 단계 학습(복습 포함)을 끝낸 날 하루 한 번만 오른다. 하루를 건너뛰면 0으로 보이고 다음 학습 때 1부터 다시 센다
 // - 오늘 할 일: lesson 항목은 그 과목 단계를 끝내면, wrongReview 항목은 오답노트에서 정한 수만큼 '복습 완료'하면
@@ -103,7 +103,7 @@ function daysBetween(from, to) {
 
 function ensureSeeded() {
   if (read(K.seeded, false)) return
-  // 예시 진도는 1년차 기록에만 넣는다(2년차는 빈 상태로 시작)
+  // seed.progress(지금은 비어 있다)는 1년차 기록에만 넣는다
   write(K.progress, { ...(SEED.progress || {}) })
   // 어제까지 연속으로 공부한 상태로 시작한다. 오늘 단계 하나를 끝내면 하루가 오른다.
   write(K.streak, { count: Number(SEED.streak) || 0, last: dateKey(daysFromNow(-1)) })
@@ -143,11 +143,10 @@ function progressMap() {
   return map && typeof map === 'object' ? map : {}
 }
 
-// 과목에서 끝낸 단계 수(0 ~ 단계 수). 저장된 값이 없으면 1년차는 예시 진도, 2년차는 0
+// 과목에서 끝낸 단계 수(0 ~ 단계 수). 저장된 값이 없으면 0
 function doneCount(subject, map = progressMap()) {
   const stored = Number(map[subject.id])
-  const fallback = currentYear() === 1 ? Number(SEED.progress?.[subject.id]) || 0 : 0
-  const n = Number.isFinite(stored) ? stored : fallback
+  const n = Number.isFinite(stored) ? stored : 0
   return Math.max(0, Math.min(subject.nodes.length, Math.floor(n)))
 }
 
