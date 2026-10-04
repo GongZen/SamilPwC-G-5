@@ -309,19 +309,21 @@
 }
 
 /* 과목 묶음(직업윤리, 실무역량) */
+/* 과목 사이를 넉넉히 띄운다(답답해 보이지 않게) */
 .subjectGroup {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 22px;
 }
 
 .subjectGroup + .subjectGroup {
-  padding-top: 14px;
+  margin-top: 6px;
+  padding-top: 20px;
   border-top: 1px solid var(--line2);
 }
 
 .groupLabel {
-  margin-bottom: -4px;
+  margin-bottom: -10px;
   font-size: 12px;
   font-weight: 700;
   color: var(--k3);
@@ -330,7 +332,7 @@
 .subject {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
 }
 
 /* 문항이 아직 없는 과목: 진도 막대 없이 '준비 중' */
@@ -450,25 +452,17 @@
   color: var(--k3);
 }
 
-/* 이름 줄 오른쪽에 짧은 상태를 함께 두는 칸(아수(습)라장 'D-1 오픈') */
+/* 이름 바로 뒤에 짧은 상태를 한 칸 띄워 붙여 쓰는 줄(아수(습)라장 D-1 오픈).
+   아래 '최고 기록 최종 생존' 줄처럼 글자 사이는 공백 한 칸이다. 공백 폭이 이름 글자와 같도록 글자 크기를 맞춘다 */
 .tileHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px;
-  width: 100%;
-  min-width: 0;
-}
-
-.tileHead .tileLabel {
-  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
+  font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .tileOpen {
-  flex-shrink: 0;
   font-size: 13px;
   font-weight: 800;
   color: var(--o);

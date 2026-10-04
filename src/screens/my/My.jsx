@@ -252,7 +252,7 @@ export default function My({ goTo }) {
                             </>
                           )}
                           <span className={s.subjectCount}>
-                            {x.done}/{x.total} 단계
+                            {x.done}/{x.total}
                           </span>
                         </span>
                       </div>
@@ -297,9 +297,9 @@ export default function My({ goTo }) {
             </button>
             <button type="button" className={s.tile} onClick={() => go('asurajang')}>
               <Swords size={22} strokeWidth={2} className={s.tileIcon} aria-hidden="true" />
-              {/* 열리는 때('D-1 오픈')는 이름 오른쪽에 둬서 다른 칸처럼 두 줄로 맞춘다 */}
+              {/* 열리는 때('D-1 오픈')는 이름 바로 뒤에 한 칸 띄워 붙여 써서 다른 칸처럼 두 줄로 맞춘다 */}
               <span className={s.tileHead}>
-                <span className={s.tileLabel}>{ARENA}</span>
+                <span className={s.tileLabel}>{ARENA}</span>{' '}
                 <span className={s.tileOpen}>{arenaOpen}</span>
               </span>
               <span className={s.tileMeta}>
