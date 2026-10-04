@@ -7,7 +7,6 @@
 // - getPlan(), togglePlanItem(id): 진도 계획의 '오늘 할 일'. 날짜가 바뀌면 체크가 모두 풀린다
 // - getMockLesson(mockId): 모의고사 회차의 문항(과목을 섞은 묶음). 회차는 언제든 바로 응시할 수 있다
 // - saveMockResult(mockId, { correct, total }): 모의고사 회차 점수 저장(마지막 점수)
-// - hasSampleStart(): 처음 접속할 때 시연용 예시 기록을 넣는지(화면에 '예시 기록' 안내를 보여 줄지)
 //
 // 과목
 // - 과목 이름, 순서, 묶음(직업윤리, 실무역량)은 config.js의 SUBJECT_GROUPS가 정한다. data/lobby.json은 id로 단원과 단계를 붙인다
@@ -99,13 +98,6 @@ function ensureSeeded() {
   )
   write(K.plan, { date: dateKey(), done: Array.isArray(SEED.planDone) ? [...SEED.planDone] : [], reviewed: 0 })
   write(K.seeded, true)
-}
-
-/** 처음 접속할 때 시연용 예시 기록(연속 학습일, 진도, 오답, 오늘 할 일)을 넣는지 @returns {boolean} */
-export function hasSampleStart() {
-  const progress = Object.values(SEED.progress || {}).some((n) => Number(n) > 0)
-  const plan = Array.isArray(SEED.planDone) && SEED.planDone.length > 0
-  return Number(SEED.streak) > 0 || progress || plan || SEED_NOTES.length > 0
 }
 
 // ---------- 내부 도우미 ----------

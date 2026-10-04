@@ -5,8 +5,7 @@ import s from './PlanSheet.module.css'
 // 진도 계획 시트. 시험까지 남은 날, 전체 진도, 오늘 할 일 체크, 학습 리마인드 설정.
 // 리마인드는 설정만 저장한다(실제 알림은 보내지 않는다).
 // 단계 학습과 오답 복습 항목은 끝내면 store가 자동으로 체크하고, 다른 탭에서 할 일은 직접 체크한다.
-// sampleNote: 처음 보이는 기록이 시연용 예시라는 안내를 맨 아래에 보여 줄지
-export default function PlanSheet({ exam, overallPct, plan, remind, sampleNote, onToggle, onToggleRemind, onClose }) {
+export default function PlanSheet({ exam, overallPct, plan, remind, onToggle, onToggleRemind, onClose }) {
   return (
     <Sheet open onClose={onClose} title="진도 계획">
       <div className={s.summary}>
@@ -44,10 +43,6 @@ export default function PlanSheet({ exam, overallPct, plan, remind, sampleNote, 
           <span className={s.knob} />
         </span>
       </button>
-
-      {sampleNote && (
-        <p className={s.hint}>처음 보이는 연속 학습일, 진도, 오답노트, 모의고사 점수는 시연용 예시 기록이에요</p>
-      )}
     </Sheet>
   )
 }

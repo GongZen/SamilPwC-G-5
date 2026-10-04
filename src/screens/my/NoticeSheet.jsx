@@ -20,7 +20,7 @@ const NOTICES = [
   {
     id: 'dates',
     title: '시험 일정은 가상 날짜예요',
-    body: `시험일, 모의고사, ${ARENA} 일정은 시연을 위해 정한 날짜예요.`,
+    body: `시험일과 ${ARENA} 일정은 시연을 위해 정한 날짜예요.`,
   },
   {
     id: 'arena',

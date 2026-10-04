@@ -18,9 +18,8 @@ import { getMockExams, getMockLesson, getWrongNotes, removeWrongNote } from '../
 import MockSheet from '../lobby/MockSheet.jsx'
 import WrongNoteSheet from '../lobby/WrongNoteSheet.jsx'
 import LessonSheet from '../lobby/LessonSheet.jsx'
-import ScheduleSheet from './ScheduleSheet.jsx'
 import NoticeSheet from './NoticeSheet.jsx'
-import { bestValue, dateText, readMyData, splitSchedule } from './myData.js'
+import { bestValue, dateText, readMyData } from './myData.js'
 import s from './My.module.css'
 
 // 화면 제목과 다른 탭 이름은 config.js에서 가져온다
@@ -62,7 +61,7 @@ function scrollBehavior() {
 // 다른 기능의 값은 myData.js가 store에서 읽어 다듬는다. 설정을 바꾸면 refresh()로 다시 그린다.
 export default function My({ goTo }) {
   const { user, requireLogin, logout } = useUser()
-  const [sheet, setSheet] = useState(null) // 'schedule' | 'notice' | 'mock' | 'wrong'(오답노트도 MY 위에서 연다)
+  const [sheet, setSheet] = useState(null) // 'notice' | 'mock' | 'wrong'(오답노트도 MY 위에서 연다)
   // MY에서 바로 푸는 모의고사(삼일 끝내기와 같은 시트를 MY 위에 연다). 열 때마다 새로 그리려고 run을 올린다
   const [lesson, setLesson] = useState(null)
   const [lessonRun, setLessonRun] = useState(0)
@@ -89,7 +88,7 @@ export default function My({ goTo }) {
   // 올해가 아닌 시험일(2년차 D-366 등)은 연도를 붙여 내일 날짜로 오해하지 않게 한다
   const examDay = dateText(exam.date)
   const examDate = examDay && !exam.sameYear ? `${String(exam.date).slice(0, 4)}년 ${examDay}` : examDay
-  const [arenaValue, arenaUnit] = data.arena?.schedule ? splitSchedule(data.arena.schedule) : ['준비 중', '']
+  const arenaOpen = data.arena?.schedule || '준비 중'
   const best = bestValue(data.best)
   const saved = data.saved.slice(0, SAVED_PREVIEW)
 
@@ -299,10 +298,10 @@ export default function My({ goTo }) {
             </button>
             <button type="button" className={s.tile} onClick={() => go('asurajang')}>
               <Swords size={22} strokeWidth={2} className={s.tileIcon} aria-hidden="true" />
-              <span className={s.tileLabel}>{ARENA}</span>
-              <span className={s.tileValue}>
-                {arenaValue}
-                {arenaUnit && <span className={s.tileUnit}> {arenaUnit}</span>}
+              {/* 열리는 때('D-1 오픈')는 이름 오른쪽에 둬서 다른 칸처럼 두 줄로 맞춘다 */}
+              <span className={s.tileHead}>
+                <span className={s.tileLabel}>{ARENA}</span>
+                <span className={s.tileOpen}>{arenaOpen}</span>
               </span>
               <span className={s.tileMeta}>
                 {best ? (
@@ -367,10 +366,6 @@ export default function My({ goTo }) {
             on={Boolean(settings.asurajangAlert)}
             onToggle={() => toggle('asurajangAlert')}
           />
-          <button type="button" className={s.link} onClick={() => setSheet('schedule')}>
-            시험 일정 관리
-            <ChevronRight size={18} strokeWidth={2.2} className={s.chevron} aria-hidden="true" />
-          </button>
           <button type="button" className={s.link} onClick={() => setSheet('notice')}>
             공지사항
             <ChevronRight size={18} strokeWidth={2.2} className={s.chevron} aria-hidden="true" />
@@ -382,15 +377,6 @@ export default function My({ goTo }) {
           )}
         </section>
       </div>
-
-      {sheet === 'schedule' && (
-        <ScheduleSheet
-          exams={YEARS.map((y) => getExam(y))}
-          year={year}
-          onPickYear={pickYear}
-          onClose={() => setSheet(null)}
-        />
-      )}
 
       {sheet === 'notice' && <NoticeSheet onClose={() => setSheet(null)} />}
 

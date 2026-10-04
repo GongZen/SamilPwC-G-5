@@ -411,9 +411,11 @@
   font-weight: 800;
 }
 
+/* 내 활동 네 칸은 줄마다 높이를 같게 맞춘다(모두 같은 크기) */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 10px;
 }
 
@@ -446,6 +448,31 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--k3);
+}
+
+/* 이름 줄 오른쪽에 짧은 상태를 함께 두는 칸(아수(습)라장 'D-1 오픈') */
+.tileHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.tileHead .tileLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tileOpen {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--o);
+  white-space: nowrap;
 }
 
 .tileValue {
@@ -577,7 +604,7 @@
   color: var(--k2);
 }
 
-/* ---- 설정: 알림 토글, 시험 일정 관리, 공지사항, 로그아웃 ---- */
+/* ---- 설정: 알림 토글, 공지사항, 로그아웃 ---- */
 .settings {
   display: flex;
   flex-direction: column;

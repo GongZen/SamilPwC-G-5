@@ -103,11 +103,9 @@ export function readMyData() {
   }
 }
 
-const WEEK = ['일', '월', '화', '수', '목', '금', '토']
-
-/** 'YYYY-MM-DD'를 '10월 27일'로 바꾼다. full이면 '2026년 10월 27일 (화)'. 형식이 틀리면 ''
+/** 'YYYY-MM-DD'를 '10월 27일'로 바꾼다. 형식이 틀리면 ''
  * 시간대 때문에 하루가 밀리지 않도록 글자를 직접 나눠 읽는다. */
-export function dateText(iso, full = false) {
+export function dateText(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso ?? ''))
   if (!m) return ''
   const y = Number(m[1])
@@ -115,14 +113,7 @@ export function dateText(iso, full = false) {
   const d = Number(m[3])
   const date = new Date(y, mo - 1, d)
   if (date.getMonth() !== mo - 1 || date.getDate() !== d) return ''
-  return full ? `${y}년 ${mo}월 ${d}일 (${WEEK[date.getDay()]})` : `${mo}월 ${d}일`
-}
-
-/** 일정 문구를 큰 글자와 작은 글자로 나눈다. 예: 'D-1 오픈' > ['D-1', '오픈'] */
-export function splitSchedule(label) {
-  const t = text(label)
-  const i = t.lastIndexOf(' ')
-  return i > 0 ? [t.slice(0, i), t.slice(i + 1)] : [t, '']
+  return `${mo}월 ${d}일`
 }
 
 /** 아수(습)라장 최고 기록을 짧게. 기록이 없으면 null

@@ -10,7 +10,6 @@ import {
   getSubjects,
   getUnits,
   getWrongNotes,
-  hasSampleStart,
   removeWrongNote,
   setSelectedSubject,
   togglePlanItem,
@@ -298,7 +297,6 @@ export default function Lobby({ entry }) {
           overallPct={progress.overallPct}
           plan={plan}
           remind={Boolean(settings.studyRemind)}
-          sampleNote={hasSampleStart()}
           onToggle={togglePlan}
           onToggleRemind={() => toggleSetting('studyRemind')}
           onClose={() => setSheet(null)}
