@@ -114,7 +114,7 @@ export default function Asurajang({ goTo, goBack }) {
   if (!round) {
     body = <p className={s.empty}>퀴즈를 준비하고 있어요</p>
   } else if (game.phase === 'lobby') {
-    body = <WaitingRoom round={round} onEnter={onEnter} />
+    body = <WaitingRoom round={round} onEnter={onEnter} onExit={onExit} />
   } else if (game.phase === 'ready') {
     body = (
       <Countdown

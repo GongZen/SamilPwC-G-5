@@ -28,6 +28,13 @@
   box-shadow: 0 4px 0 var(--o-line);
 }
 
+.plain {
+  background: var(--w);
+  color: var(--k);
+  border: 1.5px solid var(--line3);
+  box-shadow: 0 4px 0 var(--line3);
+}
+
 /* 누르면 아래 면만큼 내려간다 */
 .btn:active:not(:disabled) {
   transform: translateY(4px);

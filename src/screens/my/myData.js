@@ -53,9 +53,10 @@ function toSubject(x, i) {
   }
 }
 
+// 모의고사는 언제든 응시한다. done이면 마지막 점수가 있다
 function toMock(m, i) {
   const round = whole(m.round)
-  const done = m.status === 'done'
+  const done = m.done === true || m.status === 'done'
   const score = Number(m.score)
   return {
     id: text(m.id) || `mock-${i}`,
@@ -64,8 +65,6 @@ function toMock(m, i) {
     minutes: whole(m.minutes),
     done,
     score: done && m.score !== null && Number.isFinite(score) ? score : null,
-    openLabel: text(m.openLabel),
-    sample: m.sample === true, // 시연용 예시 점수
   }
 }
 

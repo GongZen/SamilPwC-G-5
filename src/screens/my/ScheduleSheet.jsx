@@ -47,8 +47,8 @@ export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, a
               const info = [m.questions > 0 && `${m.questions}문항`, m.minutes > 0 && `${m.minutes}분`]
                 .filter(Boolean)
                 .join(' · ')
-              let status = m.openLabel
-              if (m.done) status = m.score !== null ? `응시 완료 · ${m.score}점${m.sample ? ' (예시)' : ''}` : '응시 완료'
+              let status = '언제든 응시'
+              if (m.done) status = m.score !== null ? `응시 완료 · ${m.score}점` : '응시 완료'
               return (
                 <li key={m.id} className={s.row}>
                   <span className={s.text}>

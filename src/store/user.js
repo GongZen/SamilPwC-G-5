@@ -32,8 +32,8 @@ export function maskName(name) {
 }
 
 // year: 1(기본실무과정) | 2(외부감사실무과정)
-// studyRemind, asurajangAlert, mockAlert: 알림 설정 토글. 실제 알림은 보내지 않는다(설정만 저장).
-const DEFAULT_SETTINGS = { year: 1, studyRemind: true, asurajangAlert: true, mockAlert: false }
+// studyRemind, asurajangAlert: 알림 설정 토글. 실제 알림은 보내지 않는다(설정만 저장). 모의고사는 언제든 응시해서 알림이 없다.
+const DEFAULT_SETTINGS = { year: 1, studyRemind: true, asurajangAlert: true }
 
 export function getSettings() {
   return { ...DEFAULT_SETTINGS, ...read(SETTINGS_KEY, {}) }

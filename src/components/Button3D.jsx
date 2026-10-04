@@ -1,7 +1,7 @@
 import s from './Button3D.module.css'
 
 // 입체 버튼. 누르면 아래 면만큼 내려간다.
-// tone: 'primary'(오렌지) | 'soft'(옅은 오렌지)
+// tone: 'primary'(오렌지) | 'soft'(옅은 오렌지) | 'plain'(흰 바탕, 검은 글자)
 export default function Button3D({
   children,
   onClick,

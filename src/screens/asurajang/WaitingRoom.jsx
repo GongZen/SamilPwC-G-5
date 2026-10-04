@@ -17,7 +17,7 @@ const MAMASHELL_LINES = ['동기들 이겨 보자고요!']
 // 대기 인원은 가상 참가자로 시간이 갈수록 차오르고(가끔 몇 명은 나감) 숫자가 굴러가며 바뀐다.
 // 'N명 대기 중' 오른쪽에 3~4초마다 'Assurance Los 김도윤 님 입장' 같은 알림이 잠깐 뜨고 1명이 늘어난다(상한 config.maxParticipants).
 // 입장하기를 누르면 onEnter(인원)로 그 순간 화면에 보이던 인원을 넘겨 퀴즈 시작 인원으로 쓴다(로그인 창을 거쳐도 같은 인원).
-export default function WaitingRoom({ round, onEnter }) {
+export default function WaitingRoom({ round, onEnter, onExit }) {
   const { config, crowd } = round
   const cap = config.maxParticipants
   const [count, setCount] = useState(() => startCount(crowd, cap))
@@ -108,7 +108,12 @@ export default function WaitingRoom({ round, onEnter }) {
       </div>
 
       <div className={s.footer}>
-        <Button3D onClick={() => onEnter(count)}>입장하기</Button3D>
+        <Button3D className={s.footerBtn} onClick={() => onEnter(count)}>
+          입장하기
+        </Button3D>
+        <Button3D tone="plain" className={s.footerBtn} onClick={onExit}>
+          나가기
+        </Button3D>
       </div>
     </div>
   )

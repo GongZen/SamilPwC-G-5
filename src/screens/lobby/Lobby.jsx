@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { BookOpen, CalendarCheck, Check, ChevronDown, FileText, Flame, List, NotebookPen } from 'lucide-react'
+import { BookOpen, CalendarCheck, Check, ChevronDown, FileText, List, NotebookPen } from 'lucide-react'
 import {
   getLesson,
   getMockExams,
@@ -82,11 +82,7 @@ export default function Lobby({ entry }) {
   const wrongNotes = getWrongNotes()
   const plan = getPlan()
   const mocks = getMockExams()
-  const nextMock =
-    mocks.find((m) => m.status === 'today') ||
-    mocks.find((m) => m.status === 'upcoming') ||
-    mocks[mocks.length - 1] ||
-    null
+  const mockDone = mocks.filter((m) => m.done).length
   const settings = getSettings()
   // MY에서 고른 연차의 과목이 아직 없으면(예: 2년차) 과목 메뉴 아래에 준비 중이라고 알린다
   const year = EXAMS[exam.year] ? Number(exam.year) : 1
@@ -125,7 +121,7 @@ export default function Lobby({ entry }) {
     if (next) startLesson(next)
   }
 
-  const openMockPreview = (mockId) => {
+  const openMock = (mockId) => {
     const next = getMockLesson(mockId)
     if (next) startLesson(next)
   }
@@ -167,13 +163,7 @@ export default function Lobby({ entry }) {
         </button>
 
         <div className={s.stats}>
-          <p className={s.streak}>
-            <Flame size={20} strokeWidth={1.5} className={s.flame} aria-hidden="true" />
-            <span className={s.srOnly}>연속 학습 </span>
-            <span>{progress.streak}</span>
-            <span className={s.srOnly}>일</span>
-          </p>
-          {/* 어떤 시험의 D-day인지 함께 보여 준다. 폭이 모자라면(2년차 등) 시험 이름 끝을 줄인다 */}
+          {/* 어떤 시험의 D-day인지 함께 보여 준다(연속 학습일은 MY에서 본다). 360px 휴대폰에서도 2년차 이름까지 다 들어간다 */}
           <p className={s.examName}>{exam.name}까지</p>
           <p className={s.dday}>{exam.dday}</p>
         </div>
@@ -258,9 +248,12 @@ export default function Lobby({ entry }) {
         <button type="button" className={s.qcard} onClick={() => openSheet('mock')}>
           <FileText size={22} strokeWidth={2} className={s.qicon} aria-hidden="true" />
           <span className={s.qtitle}>모의고사</span>
-          {nextMock && (
+          {mocks.length > 0 && (
             <span className={s.qsub}>
-              <b>{nextMock.title}</b> {nextMock.openShort}
+              응시{' '}
+              <b>
+                {mockDone}/{mocks.length}
+              </b>
             </span>
           )}
         </button>
@@ -313,13 +306,7 @@ export default function Lobby({ entry }) {
       )}
 
       {sheet === 'mock' && (
-        <MockSheet
-          exams={mocks}
-          alertOn={Boolean(settings.mockAlert)}
-          onToggleAlert={() => toggleSetting('mockAlert')}
-          onPreview={openMockPreview}
-          onClose={() => setSheet(null)}
-        />
+        <MockSheet exams={mocks} onStart={openMock} onClose={() => setSheet(null)} />
       )}
     </div>
   )

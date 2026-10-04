@@ -5,7 +5,8 @@
 // 추가한 함수
 // - getSelectedSubject(), setSelectedSubject(id): 로비에서 마지막으로 고른 과목
 // - getPlan(), togglePlanItem(id): 진도 계획의 '오늘 할 일'. 날짜가 바뀌면 체크가 모두 풀린다
-// - getMockLesson(mockId): 오늘 회차 모의고사의 '미리 풀어보기' 문항(과목을 섞은 짧은 묶음)
+// - getMockLesson(mockId): 모의고사 회차의 문항(과목을 섞은 묶음). 회차는 언제든 바로 응시할 수 있다
+// - saveMockResult(mockId, { correct, total }): 모의고사 회차 점수 저장(마지막 점수)
 // - hasSampleStart(): 처음 접속할 때 시연용 예시 기록을 넣는지(화면에 '예시 기록' 안내를 보여 줄지)
 //
 // 과목
@@ -22,8 +23,8 @@
 // - 연속 학습일은 단계 학습(복습 포함)을 끝낸 날 하루 한 번만 오른다. 하루를 건너뛰면 0으로 보이고 다음 학습 때 1부터 다시 센다
 // - 오늘 할 일: lesson 항목은 그 과목 단계를 끝내면, wrongReview 항목은 오답노트에서 정한 수만큼 '복습 완료'하면
 //   (남은 오답이 더 없으면 그때) 자동으로 체크된다. tab 항목(다른 탭에서 할 일)은 직접 체크한다
-// - 모의고사 '오늘' 회차는 오픈 시각이 지나면 '내일 같은 시각 오픈'으로 보인다(시연용 반복 일정)
-// - 모의고사 미리 풀어보기는 틀린 문항만 오답노트에 남긴다. 진도, 연속 학습일, 회차 점수는 바꾸지 않는다
+// - 모의고사는 오픈 시각·알림 없이 언제든 응시한다. 회차마다 과목별 단계에서 1문항씩(회차끼리 겹치지 않게, 지금 20문항) 낸다
+// - 모의고사도 틀린 문항은 오답노트에 남는다. 진도와 연속 학습일은 바꾸지 않고, 회차 점수(마지막 점수)만 저장한다
 //
 // 저장 키(모두 'lobby.'로 시작)
 // - lobby.seeded: 시작 값을 넣었는지
@@ -33,6 +34,7 @@
 // - lobby.wrongNotes: 오답노트(최근 것이 앞)
 // - lobby.plan: 오늘 할 일. { date, done: [항목 id], reviewed: 오늘 '복습 완료'한 오답 수 }
 // - lobby.subject: 마지막으로 고른 과목 id
+// - lobby.mockScores: 모의고사 회차별 마지막 점수. { m1: { score, correct, total, at } }
 import { read, write } from './storage.js'
 import { DEFAULT_SUBJECT_ID, SUBJECTS as SUBJECT_LIST, TABS, currentSubjectName } from '../config.js'
 import data from '../data/lobby.json'
@@ -45,6 +47,7 @@ const K = {
   wrongNotes: 'lobby.wrongNotes',
   plan: 'lobby.plan',
   subject: 'lobby.subject',
+  mockScores: 'lobby.mockScores',
 }
 
 // 문항이 있는 과목만(config.js 순서). 이름과 묶음은 config.js 값을 쓴다
@@ -61,8 +64,6 @@ const SEED_NOTES = Array.isArray(SEED.wrongNotes) ? SEED.wrongNotes : []
 // 시작 값으로 넣은 예시 오답의 id. 사용자가 틀려서 생긴 오답은 다른 id를 받는다
 const SAMPLE_NOTE_IDS = new Set(SEED_NOTES.map((w) => w.id))
 
-// 모의고사 미리 풀어보기에서 과목마다 뽑는 문항 수
-const MOCK_PREVIEW_PER_SUBJECT = 2
 
 // ---------- 날짜 ----------
 
@@ -84,11 +85,6 @@ function daysBetween(from, to) {
   return Math.round((b - a) / 86400000)
 }
 
-// 'HH:MM'을 [시, 분]으로. 형식이 틀리면 null
-function parseTime(time) {
-  const [h, m] = String(time).split(':').map(Number)
-  return Number.isInteger(h) && Number.isInteger(m) ? [h, m] : null
-}
 
 // ---------- 시작 값 ----------
 
@@ -443,34 +439,30 @@ export function togglePlanItem(id) {
 
 // ---------- 모의고사 ----------
 
-function minusMinutes(time, minutes) {
-  const t = parseTime(time)
-  if (!t) return ''
-  const total = (((t[0] * 60 + t[1] - minutes) % 1440) + 1440) % 1440
-  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
+function mockScores() {
+  const v = read(K.mockScores, {})
+  return v && typeof v === 'object' ? v : {}
 }
 
-// 오늘 회차의 오픈 시각이 이미 지났는지
-function openTimePassed(time) {
-  const t = parseTime(time)
-  if (!t) return false
-  const now = new Date()
-  const at = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t[0], t[1])
-  return now.getTime() >= at.getTime()
-}
+// 회차 문항: 문항이 있는 과목마다 단계별로 1문항씩 고른다(과목 4개면 20문항).
+// 회차 번호에 따라 단계 안의 몇 번째 문항인지가 달라서(1회차 1번, 2회차 2번, 3회차 3번) 회차끼리 겹치지 않고,
+// 세 회차를 합치면 준비된 문항(60개)을 모두 한 번씩 푼다. 과목을 번갈아 섞는다.
+const MOCK_PER_NODE = 1
 
-// 미리 풀어보기 문항: 과목마다 단계를 고르게 건너뛰며 뽑고, 과목을 번갈아 섞는다.
-// 회차 번호에 따라 시작 위치가 달라서 회차마다 다른 문항이 나온다.
 function pickMockQuestions(round) {
-  const perSubject = SUBJECTS.map((s) => {
-    const pool = s.nodes.flatMap((n) => (Array.isArray(n.questions) ? n.questions : []))
-    const count = Math.min(MOCK_PREVIEW_PER_SUBJECT, pool.length)
-    const gap = Math.max(1, Math.floor(pool.length / MOCK_PREVIEW_PER_SUBJECT))
-    const start = Math.max(0, Math.floor(Number(round) || 0))
-    return Array.from({ length: count }, (_, i) => copyQuestion(pool[(start + i * gap) % pool.length], s))
-  })
+  const first = Math.max(0, Math.floor(Number(round) || 1) - 1)
+  const perSubject = SUBJECTS.map((s) =>
+    s.nodes
+      .flatMap((n) => {
+        const qs = Array.isArray(n.questions) ? n.questions : []
+        const count = Math.min(MOCK_PER_NODE, qs.length)
+        return Array.from({ length: count }, (_, i) => qs[(first + i) % qs.length])
+      })
+      .map((q) => copyQuestion(q, s)),
+  )
+  const longest = Math.max(0, ...perSubject.map((list) => list.length))
   const out = []
-  for (let i = 0; i < MOCK_PREVIEW_PER_SUBJECT; i++) {
+  for (let i = 0; i < longest; i++) {
     perSubject.forEach((list) => {
       if (list[i]) out.push(list[i])
     })
@@ -478,57 +470,39 @@ function pickMockQuestions(round) {
   return out
 }
 
-/** 모의고사 회차(MY에서도 씀). 회차 상태와 오픈 시각은 시연용 값이다.
- * 추가 필드: openShort(로비 카드용 짧은 문구, 예: '오늘 21시'), alertTime(오픈 알림 시각, 오픈 10분 전),
- *   dayLabel('오늘' | '내일', today 회차만. 오픈 시각이 지나면 '내일'), previewCount(미리 풀어보기 문항 수, today 회차만),
- *   sample(점수가 시연용 예시 값인지)
+/** 모의고사 회차(MY에서도 씀). 언제든 바로 응시할 수 있다(오픈 시각, 알림 없음).
+ * questions: 이 회차에서 실제로 푸는 문항 수, minutes: 안내용 시험 시간(타이머는 없다),
+ * score: 마지막 점수(응시한 적 없으면 data의 seedScore, 그것도 없으면 null), done: 점수가 있는지
  * @returns {Array<{ id: string, round: number, title: string, questions: number, minutes: number,
- *   status: 'done'|'today'|'upcoming', score: number|null, openLabel: string,
- *   openShort: string, alertTime: string, dayLabel: string, previewCount: number, sample: boolean }>} */
+ *   score: number|null, done: boolean, status: 'done'|'open' }>} */
 export function getMockExams() {
+  const saved = mockScores()
   return MOCK_EXAMS.map((m) => {
-    const time = m.openTime || '21:00'
-    const t = parseTime(time)
-    let openLabel = '응시 완료'
-    let openShort = '응시 완료'
-    let dayLabel = ''
-    if (m.status === 'today') {
-      dayLabel = openTimePassed(time) ? '내일' : '오늘'
-      openLabel = `${dayLabel} ${time} 오픈`
-      openShort = t ? `${dayLabel} ${t[0]}시` : `${dayLabel} ${time}`
-    } else if (m.status === 'upcoming') {
-      const d = daysFromNow(Number(m.openInDays) || 7)
-      openLabel = `${d.getMonth() + 1}월 ${d.getDate()}일 ${time} 오픈`
-      openShort = `${d.getMonth() + 1}월 ${d.getDate()}일`
-    }
-    const score = m.status === 'done' && Number.isFinite(m.score) ? m.score : null
+    const mine = saved[m.id]
+    const seed = Number.isFinite(m.seedScore) ? m.seedScore : null
+    const score = mine && Number.isFinite(mine.score) ? mine.score : seed
+    const done = score !== null
     return {
       id: m.id,
       round: m.round,
       title: `${m.round}회차`,
-      questions: m.questions,
-      minutes: m.minutes,
-      status: m.status,
+      questions: pickMockQuestions(m.round).length,
+      minutes: Math.max(0, Math.floor(Number(m.minutes) || 0)),
       score,
-      openLabel,
-      openShort,
-      alertTime: m.status === 'done' ? '' : minusMinutes(time, 10),
-      dayLabel,
-      previewCount: m.status === 'today' ? pickMockQuestions(m.round).length : 0,
-      sample: score !== null && m.sample === true,
+      done,
+      status: done ? 'done' : 'open',
     }
   })
 }
 
-/** 오늘 회차 모의고사의 미리 풀어보기. 과목을 섞은 짧은 문항 묶음이고 LessonSheet로 푼다.
- * 오늘 회차가 아니거나 문항이 없으면 null
+/** 모의고사 회차 문항. 과목을 섞은 묶음이고 LessonSheet로 푼다. 회차가 없거나 문항이 없으면 null
  * @param {string} mockId
  * @returns {{ kind: 'mock', mockId: string, subjectId: string, subjectName: string, nodeIndex: number,
  *   nodeLabel: string, review: boolean,
  *   questions: Array<{ q: string, o: string[], a: number, ex: string, subject: string }> } | null} */
 export function getMockLesson(mockId) {
   const m = MOCK_EXAMS.find((x) => x.id === mockId)
-  if (!m || m.status !== 'today') return null
+  if (!m) return null
   const questions = pickMockQuestions(m.round)
   if (questions.length === 0) return null
   return {
@@ -537,10 +511,22 @@ export function getMockLesson(mockId) {
     subjectId: '',
     subjectName: '모의고사',
     nodeIndex: -1,
-    nodeLabel: `${m.round}회차 미리 풀어보기`,
+    nodeLabel: `${m.round}회차 모의고사`,
     review: false,
     questions,
   }
+}
+
+/** 모의고사 회차 점수 저장(마지막 점수만 남긴다). 점수는 100점 만점으로 반올림
+ * @param {string} mockId @param {{ correct: number, total: number }} result
+ * @returns {{ score: number } | null} */
+export function saveMockResult(mockId, result = {}) {
+  if (!MOCK_EXAMS.some((x) => x.id === mockId)) return null
+  const total = Math.max(1, Math.floor(Number(result.total) || 0))
+  const correct = Math.min(total, Math.max(0, Math.floor(Number(result.correct) || 0)))
+  const score = Math.round((correct / total) * 100)
+  write(K.mockScores, { ...mockScores(), [mockId]: { score, correct, total, at: new Date().toISOString() } })
+  return { score }
 }
 
 // ---------- 고른 과목 ----------
