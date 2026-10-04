@@ -3,6 +3,7 @@ import { FULLSCREEN_TABS, TAB_SURFACE, TABS } from './config.js'
 import { UserProvider, useUser } from './store/UserContext.jsx'
 import TabBar from './components/TabBar.jsx'
 import LoginSheet from './components/LoginSheet.jsx'
+import InstallBanner from './components/InstallBanner.jsx'
 import Lobby from './screens/lobby/Lobby.jsx'
 import Samchocut from './screens/samchocut/Samchocut.jsx'
 import Asurajang from './screens/asurajang/Asurajang.jsx'
@@ -51,6 +52,8 @@ function Shell() {
       <main className={s.screen}>
         <Screen key={tab} goTo={goTo} goBack={goBack} entry={entry} />
       </main>
+      {/* 앱 설치 안내(조건이 맞을 때만 보인다). 문제 풀이 중인 전체 화면 탭에는 띄우지 않는다 */}
+      {!fullScreen && <InstallBanner />}
       {!fullScreen && <TabBar current={tab} onSelect={goTo} />}
       <div id="sheet-root" className={s.sheetRoot} />
       <LoginSheet open={loginOpen} onClose={closeLogin} onSubmit={login} />

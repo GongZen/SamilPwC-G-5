@@ -1,0 +1,139 @@
+/* 하단 탭 바로 위에 뜨는 설치 안내 카드 */
+.banner {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 8px;
+  padding: 10px 6px 10px 10px;
+  border: 1.5px solid var(--o-line);
+  border-radius: 16px;
+  background: var(--w);
+  box-shadow: var(--pop-shadow);
+  animation: rise 0.22s ease-out;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--k);
+}
+
+.sub {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--k3);
+}
+
+/* 설치 버튼: 작은 입체 버튼 */
+.action {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--o);
+  box-shadow: 0 3px 0 var(--o-dk);
+  color: var(--w);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.action:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--o-dk);
+}
+
+.close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k4);
+}
+
+/* 아이폰 안내 시트 */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepNo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.stepText {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.stepIcon {
+  display: inline-block;
+  margin: 0 2px 0 4px;
+  vertical-align: -3px;
+  color: var(--o);
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--k3);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "삼일 끝내기",
   "short_name": "삼일 끝내기",
-  "description": "수습 공인회계사 종합평가 대비 앱",
+  "description": "수습 공인회계사 종합평가 대비 앱. 과목별 단계 학습, 선배들의 3초 암기법, 시험 전날 서바이벌 퀴즈까지 한 곳에서",
   "lang": "ko",
   "start_url": "/",
   "scope": "/",
@@ -12,5 +12,11 @@
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/1-lobby.png", "sizes": "786x1704", "type": "image/png", "form_factor": "narrow", "label": "과목별 단계 학습" },
+    { "src": "/screenshots/2-samchocut.png", "sizes": "786x1704", "type": "image/png", "form_factor": "narrow", "label": "선배들의 3초 암기법" },
+    { "src": "/screenshots/3-asurajang.png", "sizes": "786x1704", "type": "image/png", "form_factor": "narrow", "label": "시험 전날 서바이벌 퀴즈" },
+    { "src": "/screenshots/4-my.png", "sizes": "786x1704", "type": "image/png", "form_factor": "narrow", "label": "내 진도와 시험 D-day" }
   ]
 }

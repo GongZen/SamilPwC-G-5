@@ -92,7 +92,7 @@ src/
 ├─ main.jsx, App.jsx, config.js     시작점, 앱 틀(탭 이동, 로고, 시트 층), 표시 이름과 과목 구성 (빌드 리드)
 ├─ styles/tokens.css, global.css    색 변수, 기본값 (빌드 리드)
 ├─ components/                      공통 부품 (빌드 리드)
-│   TabBar, Button3D, Card, Sheet, LoginSheet, Mascot, MascotTalk(누르면 말풍선)
+│   TabBar, Button3D, Card, Sheet, LoginSheet, Mascot, MascotTalk(누르면 말풍선), InstallBanner(앱 설치 안내)
 ├─ store/                           데이터 창구. 화면은 여기 함수만 부른다
 │   storage.js(빌드 리드), user.js와 UserContext.jsx(간편 로그인, 설정, D-day)
 │   lobby.js, samchocut.js, asurajang.js(기능 담당자)
@@ -113,6 +113,7 @@ src/
 - 타이머는 시작 시각을 기준으로 남은 시간을 계산하고, 화면이 사라질 때 반드시 정리한다(`clearInterval`)
 - 시간에 묶인 잠금(예: 오늘 21:00 오픈)은 시안대로 보여 주되, 핵심 체험(단계 학습, 퀴즈)은 언제 열어도 해 볼 수 있게 한다
 - 알림 토글은 설정만 저장한다(`setSetting`). 실제 알림은 보내지 않는다
+- 앱 설치: 카카오톡 안 브라우저로 열면 `index.html`의 스크립트가 기본 브라우저로 넘긴다(`kakaotalk://web/openExternal`, 카카오 공식 문서에 없는 방식). 설치 안내 배너는 `src/install.js`가 조건을 정한다(안드로이드는 브라우저가 허락하면 설치 버튼, 아이폰은 홈 화면에 추가 방법). 설치 창에 보이는 설명과 화면 사진은 `public/manifest.webmanifest`와 `public/screenshots/`
 - 버튼과 입력란은 실제 `<button>`, `<input>`을 쓰고, 누르는 영역은 44px 이상으로 한다
 
 ## 9. 실행과 확인
