@@ -4,12 +4,6 @@
   gap: 14px;
 }
 
-.lead {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--k3);
-}
-
 .field {
   display: flex;
   flex-direction: column;
@@ -35,13 +29,4 @@
 .input:focus {
   border-color: var(--o);
   background: var(--w);
-}
-
-.input::placeholder {
-  color: var(--k4);
-}
-
-.note {
-  font-size: 13px;
-  color: var(--k3);
 }

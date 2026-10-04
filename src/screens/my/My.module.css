@@ -177,15 +177,11 @@
   fill: var(--flame);
 }
 
-.guestTitle {
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.35;
-}
-
-.guestSub {
-  font-size: 13px;
-  color: var(--k3);
+/* 로그인 전: 인물 아이콘 오른쪽 남은 폭을 간편 로그인 버튼이 채운다 */
+.loginBtn {
+  flex: 1;
+  width: auto;
+  min-width: 0;
 }
 
 /* ---- 시험 구분(1년차, 2년차) ---- */

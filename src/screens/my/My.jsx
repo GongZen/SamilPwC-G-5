@@ -164,14 +164,10 @@ export default function My({ goTo }) {
               <span className={s.avatar} aria-hidden="true">
                 <UserRound size={28} strokeWidth={2} />
               </span>
-              <div className={s.who}>
-                <p className={s.guestTitle}>로그인하고 기록을 이어가세요</p>
-                <p className={s.guestSub}>이름과 부서만 입력하면 돼요</p>
-              </div>
+              <Button3D ref={loginRef} tone="soft" className={s.loginBtn} onClick={() => requireLogin()}>
+                간편 로그인
+              </Button3D>
             </div>
-            <Button3D ref={loginRef} tone="soft" onClick={() => requireLogin()}>
-              간편 로그인
-            </Button3D>
           </section>
         )}
 
