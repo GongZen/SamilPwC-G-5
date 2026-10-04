@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+/* 늘 밝은 화면으로 연다. 기기나 브라우저가 다크 모드여도 색을 뒤집지 못하게 한다(index.html의 meta와 같은 값) */
+:root {
+  color-scheme: only light;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
