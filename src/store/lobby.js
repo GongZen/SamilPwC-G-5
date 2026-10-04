@@ -29,7 +29,7 @@
 // - 오늘 할 일은 사용자가 직접 추가, 수정, 삭제할 수 있다(최대 5개, 한 줄 30자). 한 번 바꾸면 data의 plan 대신
 //   이 기기에 저장한 목록을 쓴다. 새로 쓴 항목과 글자를 고친 기본 항목은 kind 'custom'이 되어 직접 체크한다.
 //   목록은 날이 바뀌어도 그대로 두고 체크만 풀린다
-// - 모의고사는 오픈 시각·알림 없이 언제든 응시한다. 회차마다 과목별 단계에서 1문항씩(회차끼리 겹치지 않게, 지금 20문항) 낸다
+// - 모의고사는 오픈 시각·알림 없이 언제든 응시한다. 회차마다 과목별 단계에서 1문항씩(회차끼리 겹치지 않게, 지금 35문항) 낸다
 // - 모의고사도 틀린 문항은 오답노트에 남는다. 진도와 연속 학습일은 바꾸지 않고, 회차 점수(마지막 점수)만 저장한다
 //
 // 저장 키(모두 'lobby.'로 시작)
@@ -256,7 +256,7 @@ function planText(item, plan, remaining) {
  * ready: 문항이 있는 과목인지. false면 '준비 중'이고 unit은 비어 있으며 nodes는 빈 배열이다(추가 필드)
  * group, groupLabel: 과목 묶음(예: 'practice', '실무역량'), source: 문항 출처 표기(추가 필드)
  * @returns {Array<{ id: string, name: string, group: string, groupLabel: string, ready: boolean,
- *   year: number|null, yearLabel: string, source: string,
+ *   source: string,
  *   unit: { label: string, title: string, sub: string, short: string }, nodes: string[] }>} */
 export function getSubjects() {
   return SUBJECT_LIST.map((c) => {
@@ -267,8 +267,6 @@ export function getSubjects() {
       group: c.group,
       groupLabel: c.groupLabel,
       ready: Boolean(s),
-      year: s ? s.year : null,
-      yearLabel: s?.yearLabel || '',
       source: s?.source || '',
       unit: {
         label: s?.unit?.label || '',
@@ -523,9 +521,9 @@ function mockScores() {
   return v && typeof v === 'object' ? v : {}
 }
 
-// 회차 문항: 문항이 있는 과목마다 단계별로 1문항씩 고른다(과목 4개면 20문항).
+// 회차 문항: 문항이 있는 과목마다 단계별로 1문항씩 고른다(과목 7개면 35문항).
 // 회차 번호에 따라 단계 안의 몇 번째 문항인지가 달라서(1회차 1번, 2회차 2번, 3회차 3번) 회차끼리 겹치지 않고,
-// 세 회차를 합치면 준비된 문항(60개)을 모두 한 번씩 푼다. 과목을 번갈아 섞는다.
+// 세 회차를 합치면 준비된 문항(105개)을 모두 한 번씩 푼다. 과목을 번갈아 섞는다.
 const MOCK_PER_NODE = 1
 
 function pickMockQuestions(round) {

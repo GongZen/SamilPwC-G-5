@@ -1,7 +1,7 @@
 // MY 화면이 다른 기능의 store에서 읽는 값을 한곳에 모으고 다듬는다.
 // MY는 읽기만 한다. 다른 기능의 값을 바꾸는 함수는 부르지 않는다.
 // 다른 기능이 아직 빈 값(빈 배열, null)을 돌려주거나 오류를 내도 MY 화면은 기본값으로 그린다.
-import { getMockExams, getProgress, getWrongNotes } from '../../store/lobby.js'
+import { getMockExams, getProgress, getSubjects, getWrongNotes } from '../../store/lobby.js'
 import { getMyPosts, getSavedPosts } from '../../store/samchocut.js'
 import { getBestResult, getRound } from '../../store/asurajang.js'
 
@@ -101,6 +101,14 @@ export function readMyData() {
     arena: toArena(safe(getRound, null)),
     best: toBest(safe(getBestResult, null)),
   }
+}
+
+/** 문항 출처가 있는 과목과 출처(공지사항에서 씀). config.js의 과목 순서를 따른다.
+ * 예: [{ name: '정보기술', source: '회계감사기준서 315와 일반 IT' }] */
+export function readSources() {
+  return list(safe(getSubjects, []))
+    .map((x) => ({ name: text(x.name), source: text(x.source) }))
+    .filter((x) => x.name && x.source)
 }
 
 /** 'YYYY-MM-DD'를 '10월 27일'로 바꾼다. 형식이 틀리면 ''

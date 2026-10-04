@@ -28,6 +28,16 @@
   font-weight: 700;
 }
 
+/* 여러 줄 공지(문항 출처): 줄 사이를 좁게 */
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .body {
   font-size: 14px;
   line-height: 1.5;
