@@ -30,17 +30,13 @@ export default function WaitingRoom({ round, onEnter }) {
   return (
     <div className={s.wrap}>
       {/* 맨 위 배너 카드는 스크롤하지 않는다. 조이와 마마쉘도 카드 안 제자리에 고정된다(마스코트 배치판에서 정한 자리).
-          작은 제목과 큰 제목은 카드 왼쪽 위에 붙이고, 큰 제목은 마스코트에 닿지 않는 크기로 한 줄 */}
+          작은 제목은 카드 왼쪽 맨 위, 큰 제목은 작은 제목과 입장 대기 줄 사이의 세로 가운데에 마스코트에 닿지 않는 크기로 한 줄 */}
       <section className={s.hero}>
-        <div className={s.heroTop}>
-          <div className={s.heroText}>
-            {round.tagline && <span className={s.tagline}>{round.tagline}</span>}
-            {round.title && <h2 className={s.heroTitle}>{round.title}</h2>}
-          </div>
-          <div className={s.mascots}>
-            <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
-            <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
-          </div>
+        {round.tagline && <span className={s.tagline}>{round.tagline}</span>}
+        <div className={s.titleBox}>{round.title && <h2 className={s.heroTitle}>{round.title}</h2>}</div>
+        <div className={s.mascots}>
+          <MascotTalk name="joy" size={64} lines={JOY_LINES} side="top" align="center" />
+          <MascotTalk name="mamashell" size={64} lines={MAMASHELL_LINES} side="top" align="end" />
         </div>
         <p className={s.waiting}>
           <Users size={20} strokeWidth={2} aria-hidden="true" />

@@ -6,14 +6,21 @@
   flex-direction: column;
 }
 
-/* 배너 카드는 스크롤하지 않는다. 아래 입체 면(5px)이 규칙 목록 위에 보이도록 위에 그린다 */
+/* 배너 카드는 스크롤하지 않는다. 아래 입체 면(5px)이 규칙 목록 위에 보이도록 위에 그린다.
+   칸 배치: 왼쪽 위 작은 제목, 그 아래 큰 제목 칸(남은 높이 전부), 오른쪽 마스코트, 맨 아래 입장 대기 줄.
+   큰 제목 칸은 작은 제목 아래부터 입장 대기 줄 바로 위까지라, 그 안에서 가운데에 두면 두 줄 사이의 가운데가 된다 */
 .hero {
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'tag mascots'
+    'title mascots'
+    'pill pill';
+  column-gap: 12px;
   margin: 8px 20px 0;
   padding: 24px 20px;
   border-radius: 20px;
@@ -22,34 +29,28 @@
   color: var(--w);
 }
 
-/* 위 줄: 왼쪽에 작은 제목과 큰 제목(카드 맨 위부터), 오른쪽에 조이와 마마쉘 */
-.heroTop {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-/* 큰 제목 글자 크기를 이 칸의 폭에 맞추려고 container로 둔다 */
-.heroText {
-  flex: 1;
+/* 큰 제목 칸. 글자 크기를 이 칸의 폭에 맞추려고 container로 둔다 */
+.titleBox {
+  grid-area: title;
+  align-self: center;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   container-type: inline-size;
 }
 
 /* 조이와 마마쉘(높이 64px, 사이 4px): 카드 안쪽 위에서 10px 아래, 마마쉘 오른쪽 끝은 카드 안쪽 여백으로 8px 들어간다.
-   393px 화면에서 조이 왼쪽 221px·위 130px, 마마쉘 왼쪽 287px(마스코트 배치판 값). 카드가 고정이라 스크롤에 움직이지 않는다 */
+   393px 화면에서 조이 왼쪽 221px·위 130px, 마마쉘 왼쪽 287px(마스코트 배치판 값). 카드가 고정이라 스크롤에 움직이지 않는다.
+   아래 18px은 입장 대기 줄까지의 간격이다 */
 .mascots {
-  flex-shrink: 0;
+  grid-area: mascots;
   display: flex;
   align-items: flex-end;
   gap: 4px;
-  margin: 10px -8px 0 0;
+  margin: 10px -8px 18px 0;
 }
 
 .tagline {
+  grid-area: tag;
+  align-self: start;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -68,10 +69,10 @@
 }
 
 .waiting {
+  grid-area: pill;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
   padding: 10px 14px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--w) 16%, transparent);
