@@ -214,12 +214,12 @@ export default function My({ goTo }) {
 
         <section className={s.exam} aria-label="시험까지 남은 날과 전체 진도">
           <div className={s.examTop}>
-            <div className={s.examText}>
+            {/* 시험 이름과 날짜는 한 줄에 두고 세로 가운데를 맞춘다. 날짜만 쓴다('시험일' 글자를 빼서 이름 자리를 넓힌다) */}
+            <div className={s.examHead}>
               <p className={s.examName}>{examLabel}</p>
-              <p className={s.dday}>{exam.dday}</p>
+              {examDate && <p className={s.examDate}>{examDate}</p>}
             </div>
-            {/* 날짜만 쓴다('시험일' 글자를 빼서 왼쪽 시험 이름이 한 줄에 들어갈 자리를 넓힌다) */}
-            {examDate && <p className={s.examDate}>{examDate}</p>}
+            <p className={s.dday}>{exam.dday}</p>
           </div>
           <div className={s.overall}>
             <p className={s.overallRow}>

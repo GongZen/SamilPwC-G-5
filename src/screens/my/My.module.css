@@ -230,19 +230,20 @@
 
 .examTop {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.examText {
-  min-width: 0;
-  display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
+/* 시험 이름(왼쪽)과 날짜(오른쪽)를 한 줄에 두고 두 글자의 세로 가운데를 맞춘다 */
+.examHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .examName {
+  min-width: 0;
   font-size: 13px;
   font-weight: 600;
   opacity: 0.92;
@@ -255,8 +256,10 @@
   line-height: 1.15;
 }
 
+/* 날짜 칸은 이름 줄보다 높지만, 위아래 여백만큼 겹쳐 놓아 아래 D-day 자리를 밀어내지 않는다 */
 .examDate {
   flex-shrink: 0;
+  margin: -5px 0;
   padding: 5px 10px;
   border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--w) 18%, transparent);
