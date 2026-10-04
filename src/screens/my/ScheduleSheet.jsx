@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
 import Sheet from '../../components/Sheet.jsx'
 import { dateText } from './myData.js'
 import s from './ScheduleSheet.module.css'
@@ -6,7 +6,7 @@ import s from './ScheduleSheet.module.css'
 // 시험 일정 관리: 내 시험(연차) 고르기, 모의고사 회차, 아수(습)라장 일정을 한곳에서 본다.
 // 디자인에는 이 시트가 없어서 MY 시안의 카드 모양에 맞춰 임시로 만들었다.
 // 날짜와 회차는 시연용 가상 값이다(config.js의 EXAMS, 각 기능의 data 파일).
-// onStartMock(회차 id): 아직 안 푼 회차의 '응시하기'를 누르면 이 시트를 닫고 바로 모의고사를 연다
+// onStartMock(회차 id): 아직 안 푼 회차 줄('응시하기 >')을 누르면 이 시트를 닫고 바로 모의고사를 연다
 export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, arenaLabel, onStartMock, onClose }) {
   return (
     <Sheet open onClose={onClose} title="시험 일정 관리">
@@ -48,19 +48,28 @@ export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, a
                 .filter(Boolean)
                 .join(' · ')
               const status = m.score !== null ? `응시 완료 · ${m.score}점` : '응시 완료'
-              return (
-                <li key={m.id} className={s.row}>
-                  <span className={s.text}>
-                    <span className={s.title}>{m.title}</span>
-                    {info && <span className={s.sub}>{info}</span>}
-                  </span>
-                  {m.done ? (
+              const text = (
+                <span className={s.text}>
+                  <span className={s.title}>{m.title}</span>
+                  {info && <span className={s.sub}>{info}</span>}
+                </span>
+              )
+              if (m.done) {
+                return (
+                  <li key={m.id} className={s.row}>
+                    {text}
                     <span className={`${s.status} ${s.statusDone}`}>{status}</span>
-                  ) : (
-                    <button type="button" className={s.startBtn} onClick={() => onStartMock?.(m.id)}>
-                      응시하기
-                    </button>
-                  )}
+                  </li>
+                )
+              }
+              // 안 푼 회차: 모의고사 시트처럼 '응시하기 >' 글자만 두고 줄 전체를 누르면 바로 시작
+              return (
+                <li key={m.id}>
+                  <button type="button" className={`${s.row} ${s.rowBtn}`} onClick={() => onStartMock?.(m.id)}>
+                    {text}
+                    <span className={s.start}>응시하기</span>
+                    <ChevronRight size={18} strokeWidth={2.2} className={s.chev} aria-hidden="true" />
+                  </button>
                 </li>
               )
             })}

@@ -118,27 +118,27 @@
   color: var(--k3);
 }
 
-/* 아직 안 푼 모의고사 회차: 누르면 바로 응시(작은 입체 버튼) */
-.startBtn {
-  flex-shrink: 0;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 10px;
-  background: var(--o);
-  box-shadow: 0 3px 0 var(--o-dk);
-  color: var(--w);
-  font-size: 13px;
-  font-weight: 800;
-  white-space: nowrap;
-  transition:
-    transform 0.08s ease,
-    box-shadow 0.08s ease;
+/* 아직 안 푼 모의고사 회차: 줄 전체가 버튼이고 오른쪽에 '응시하기 >'(모의고사 시트와 같은 모양) */
+.rowBtn {
+  width: 100%;
+  text-align: left;
+  transition: transform 0.08s ease;
 }
 
-.startBtn:active {
-  transform: translateY(3px);
-  box-shadow: 0 0 0 var(--o-dk);
+.rowBtn:active {
+  transform: scale(0.98);
+}
+
+.start {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--o);
+}
+
+.chev {
+  flex-shrink: 0;
+  color: var(--k4);
 }
 
 .hint {
