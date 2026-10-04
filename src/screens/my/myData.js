@@ -53,20 +53,8 @@ function toSubject(x, i) {
   }
 }
 
-// 모의고사는 언제든 응시한다. done이면 마지막 점수가 있다
-function toMock(m, i) {
-  const round = whole(m.round)
-  const done = m.done === true || m.status === 'done'
-  const score = Number(m.score)
-  return {
-    id: text(m.id) || `mock-${i}`,
-    title: text(m.title) || (round ? `${round}회차` : '모의고사'),
-    questions: whole(m.questions),
-    minutes: whole(m.minutes),
-    done,
-    score: done && m.score !== null && Number.isFinite(score) ? score : null,
-  }
-}
+// 모의고사는 언제든 응시한다. MY에는 응시한 회차 수만 보여 준다
+const isMockDone = (m) => m.done === true || m.status === 'done'
 
 // 저장한 암기법 한 줄: 키워드 칸을 이어 붙인 글자(예: 계수가배인), 주제, 과목
 function toSaved(p, i) {
@@ -78,9 +66,10 @@ function toSaved(p, i) {
   }
 }
 
+// 아수(습)라장은 열리는 때(예: 'D-1 오픈')만 내 활동 칸에 보여 준다
 function toArena(r) {
   if (!isObj(r)) return null
-  return { schedule: text(r.scheduleLabel), subtitle: text(r.subtitle), subjects: text(r.subjectsLabel) }
+  return { schedule: text(r.scheduleLabel) }
 }
 
 function toBest(b) {
@@ -99,14 +88,12 @@ function toBest(b) {
 export function readMyData() {
   const progress = safe(getProgress, {})
   const p = isObj(progress) ? progress : {}
-  const mocks = list(safe(getMockExams, [])).map(toMock)
   return {
     overallPct: percent(p.overallPct),
     streak: whole(p.streak),
     subjects: list(p.bySubject).map(toSubject),
     wrongCount: list(safe(getWrongNotes, [])).length,
-    mocks,
-    mockDone: mocks.filter((m) => m.done).length,
+    mockDone: list(safe(getMockExams, [])).filter(isMockDone).length,
     postCount: list(safe(getMyPosts, [])).length,
     saved: list(safe(getSavedPosts, []))
       .map(toSaved)

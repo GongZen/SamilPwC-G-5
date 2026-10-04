@@ -34,7 +34,7 @@ function toQuestion(item) {
 
 /** 회차 정보, 문항, 설정값
  * 기본 모양은 그대로 두고, 대기실 문구용 tagline, prize, resultNotice와 config.revealSeconds를 더했다.
- * - title: 대기실 큰 제목(한 줄), subtitle: 회차 이름(MY 시험 일정에서 씀, 대기실 머리에는 보이지 않음), scheduleLabel: 열리는 때(MY에서 씀)
+ * - title: 대기실 큰 제목(한 줄), subtitle: 회차 이름(지금은 화면에 쓰지 않음), scheduleLabel: 열리는 때(MY 내 활동 칸에서 씀)
  * - tagline: 대기실 카드 맨 위 작은 글자, prize: 경품 이름(비우면 표시하지 않음), resultNotice: 우승 화면 공지 안내
  * - config.survivalRates: 문제마다 다음 문제로 넘어가는 생존 비율. 문항이 더 많으면 마지막 값을 다시 쓴다
  * - config.leaveEliminates: true면 퀴즈 도중 화면을 벗어날 때 탈락, config.revealSeconds: 정답 공개 후 다음 문제까지 초

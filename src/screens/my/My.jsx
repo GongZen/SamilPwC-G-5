@@ -388,10 +388,6 @@ export default function My({ goTo }) {
           exams={YEARS.map((y) => getExam(y))}
           year={year}
           onPickYear={pickYear}
-          onStartMock={startMock}
-          mocks={data.mocks}
-          arena={data.arena}
-          arenaLabel={ARENA}
           onClose={() => setSheet(null)}
         />
       )}
