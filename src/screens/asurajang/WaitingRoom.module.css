@@ -69,6 +69,7 @@
 }
 
 /* 대기 줄(한 줄): 왼쪽은 대기 인원(숫자가 굴러가며 바뀜), 오른쪽은 입장 알림(3~4초마다 잠깐 떴다가 사라짐) */
+/* 'N명 대기 중' 글자는 13px, 사람 아이콘은 18px(어떤 폰에서도 한 줄에 여유 있게) */
 .waiting {
   grid-area: pill;
   display: flex;
@@ -77,7 +78,7 @@
   padding: 10px 14px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--w) 16%, transparent);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
 }
 

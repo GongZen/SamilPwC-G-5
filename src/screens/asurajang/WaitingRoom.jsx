@@ -54,8 +54,8 @@ export default function WaitingRoom({ round, onEnter, onExit }) {
       badge: String(config.secondsPerQuestion),
       text: `문제당 ${config.secondsPerQuestion}초, 시간이 끝나면 정답 공개`,
     },
-    { key: 'wrong', Icon: CircleX, text: '틀리거나 답을 못 고르면 즉시 탈락' },
-    config.leaveEliminates && { key: 'leave', Icon: EyeOff, text: '화면을 벗어나면 탈락 처리' },
+    { key: 'wrong', Icon: CircleX, text: '틀리거나 답을 고르지 못하면 탈락' },
+    config.leaveEliminates && { key: 'leave', Icon: EyeOff, text: '화면을 벗어나도 탈락' },
     {
       key: 'prize',
       Icon: Gift,
@@ -76,7 +76,7 @@ export default function WaitingRoom({ round, onEnter, onExit }) {
         </div>
         {/* 한 줄: 왼쪽 'N명 대기 중'(이미 들어와 기다리는 인원), 오른쪽 입장 알림 */}
         <p className={s.waiting}>
-          <Users size={20} strokeWidth={2} className={s.waitingIcon} aria-hidden="true" />
+          <Users size={18} strokeWidth={2} className={s.waitingIcon} aria-hidden="true" />
           <span className={s.waitingCount}>
             <RollingNumber value={count} />명 대기 중
           </span>
