@@ -34,7 +34,7 @@
 // - lobby.plan: 오늘 할 일. { date, done: [항목 id], reviewed: 오늘 '복습 완료'한 오답 수 }
 // - lobby.subject: 마지막으로 고른 과목 id
 import { read, write } from './storage.js'
-import { SUBJECTS as SUBJECT_LIST, TABS, currentSubjectName } from '../config.js'
+import { DEFAULT_SUBJECT_ID, SUBJECTS as SUBJECT_LIST, TABS, currentSubjectName } from '../config.js'
 import data from '../data/lobby.json'
 
 const K = {
@@ -546,10 +546,11 @@ export function getMockLesson(mockId) {
 // ---------- 고른 과목 ----------
 
 /** 로비에서 마지막으로 고른 과목 id. 준비 중인 과목도 고를 수 있다.
- * 고른 적이 없으면 문항이 있는 첫 과목 @returns {string|null} */
+ * 고른 적이 없으면 config.js의 DEFAULT_SUBJECT_ID(정보기술), 그 과목에 문항이 없으면 문항이 있는 첫 과목 @returns {string|null} */
 export function getSelectedSubject() {
   const id = read(K.subject, null)
   if (SUBJECT_LIST.some((c) => c.id === id)) return id
+  if (findSubject(DEFAULT_SUBJECT_ID)) return DEFAULT_SUBJECT_ID
   return SUBJECTS[0]?.id ?? SUBJECT_LIST[0]?.id ?? null
 }
 

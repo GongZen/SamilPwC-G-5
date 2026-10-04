@@ -40,6 +40,10 @@ export const SUBJECTS = SUBJECT_GROUPS.flatMap((g) =>
   g.subjects.map((x) => ({ ...x, group: g.id, groupLabel: g.label })),
 )
 
+// 처음 접속했을 때(과목을 고른 적이 없을 때) 삼일 끝내기에서 먼저 보여 주는 과목 id. 시연 과목인 정보기술.
+// 한 번 고른 과목은 다음 접속에도 그대로 유지된다.
+export const DEFAULT_SUBJECT_ID = 'it'
+
 // 예전 과목 이름(10/04 이전). 이 기기에 이미 저장된 기록을 새 이름으로 바꿔 보여 줄 때 쓴다.
 const OLD_SUBJECT_NAMES = { 재무회계: '회계', 회계감사: '감사', 세법: '세무' }
 
