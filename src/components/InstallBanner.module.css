@@ -45,7 +45,7 @@
 .action {
   flex-shrink: 0;
   min-height: 40px;
-  padding: 0 14px;
+  padding: 0 15px;
   border: 0;
   border-radius: 10px;
   background: var(--o);

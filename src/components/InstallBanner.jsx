@@ -9,7 +9,7 @@ import s from './InstallBanner.module.css'
 const KAKAO_WAIT_MS = 1500
 
 const TEXT = {
-  install: { title: `${APP_NAME} 앱 설치`, sub: '설치하면 전체 화면 앱으로 바로 열려요', action: '설치' },
+  install: { title: `${APP_NAME} 앱 설치`, sub: '', action: '설치' },
   ios: { title: '홈 화면에 추가하기', sub: '추가하면 전체 화면 앱처럼 열려요', action: '방법 보기' },
   kakao: {
     title: '카카오톡에서는 설치할 수 없어요',
@@ -47,7 +47,7 @@ export default function InstallBanner() {
           <img src="/icons/icon-192.png" alt="" className={s.icon} />
           <div className={s.text}>
             <p className={s.title}>{text.title}</p>
-            <p className={s.sub}>{text.sub}</p>
+            {text.sub && <p className={s.sub}>{text.sub}</p>}
           </div>
           <button type="button" className={s.action} onClick={act}>
             {text.action}
