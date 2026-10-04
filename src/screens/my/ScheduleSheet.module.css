@@ -122,11 +122,3 @@
   font-size: 13px;
   color: var(--k3);
 }
-
-.note {
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--bg);
-  color: var(--k3);
-  font-size: 13px;
-}

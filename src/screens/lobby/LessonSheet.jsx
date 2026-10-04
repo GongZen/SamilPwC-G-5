@@ -25,7 +25,8 @@ const BACK_LABEL = LOBBY ? `${withRo(LOBBY)} 돌아가기` : '돌아가기'
 // 단계 학습 시트. 보기 선택, 확인(채점, 틀리면 오답노트 저장), 다음 문제, 결과 순서로 진행한다.
 // lesson은 store의 getLesson() 또는 getMockLesson() 결과다. 열 때마다 새로 그린다(Lobby에서 key로 구분).
 // 모의고사(kind 'mock')는 문항마다 과목이 다르고, 진도와 연속 학습일 대신 회차 점수를 저장한다.
-export default function LessonSheet({ lesson, onClose, onChange }) {
+// backLabel: 완료 화면 버튼 글자(다른 탭에서 열었을 때 바꾼다. 기본은 '삼일 끝내기로 돌아가기')
+export default function LessonSheet({ lesson, onClose, onChange, backLabel }) {
   const [qi, setQi] = useState(0)
   const [picked, setPicked] = useState(null)
   const [checked, setChecked] = useState(false)
@@ -120,7 +121,7 @@ export default function LessonSheet({ lesson, onClose, onChange }) {
           {result.streak !== null && <p className={s.doneStreak}>연속 학습 {result.streak}일째</p>}
           {isMock && Number.isFinite(result.score) && <p className={s.doneNote}>점수 {result.score}점</p>}
           <Button3D className={s.doneBtn} onClick={onClose}>
-            {BACK_LABEL}
+            {backLabel || BACK_LABEL}
           </Button3D>
         </div>
       ) : (

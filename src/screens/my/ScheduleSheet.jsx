@@ -36,7 +36,6 @@ export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, a
             )
           })}
         </ul>
-        <p className={s.hint}>고른 시험으로 D-day를 계산해요</p>
       </section>
 
       <section className={s.group}>
@@ -80,7 +79,6 @@ export default function ScheduleSheet({ exams, year, onPickYear, mocks, arena, a
         </section>
       )}
 
-      <p className={s.note}>날짜와 회차는 시연용 가상 일정이에요</p>
     </Sheet>
   )
 }

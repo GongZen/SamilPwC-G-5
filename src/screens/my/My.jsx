@@ -14,6 +14,9 @@ import { useUser } from '../../store/UserContext.jsx'
 import { getExam, getSettings, setSetting } from '../../store/user.js'
 import Button3D from '../../components/Button3D.jsx'
 import MascotTalk from '../../components/MascotTalk.jsx'
+import { getMockExams, getMockLesson } from '../../store/lobby.js'
+import MockSheet from '../lobby/MockSheet.jsx'
+import LessonSheet from '../lobby/LessonSheet.jsx'
 import ScheduleSheet from './ScheduleSheet.jsx'
 import NoticeSheet from './NoticeSheet.jsx'
 import { bestValue, dateText, readMyData, splitSchedule } from './myData.js'
@@ -58,7 +61,10 @@ function scrollBehavior() {
 // 다른 기능의 값은 myData.js가 store에서 읽어 다듬는다. 설정을 바꾸면 refresh()로 다시 그린다.
 export default function My({ goTo }) {
   const { user, requireLogin, logout } = useUser()
-  const [sheet, setSheet] = useState(null) // 'schedule' | 'notice'
+  const [sheet, setSheet] = useState(null) // 'schedule' | 'notice' | 'mock'
+  // MY에서 바로 푸는 모의고사(삼일 끝내기와 같은 시트를 MY 위에 연다). 열 때마다 새로 그리려고 run을 올린다
+  const [lesson, setLesson] = useState(null)
+  const [lessonRun, setLessonRun] = useState(0)
   const [, refresh] = useReducer((n) => n + 1, 0)
   const scrollRef = useRef(null)
   const settingsRef = useRef(null)
@@ -108,6 +114,20 @@ export default function My({ goTo }) {
     if (!box || !el) return
     box.scrollTo({ top: Math.max(0, el.offsetTop - 12), behavior: scrollBehavior() })
     el.focus({ preventScroll: true })
+  }
+
+  // 모의고사 회차를 누르면 시트를 닫고 바로 문제를 연다. 끝나면 MY 값(응시 횟수 등)을 다시 읽는다
+  const startMock = (mockId) => {
+    const next = getMockLesson(mockId)
+    if (!next) return
+    setSheet(null)
+    setLessonRun((n) => n + 1)
+    setLesson(next)
+  }
+
+  const closeLesson = () => {
+    setLesson(null)
+    refresh()
   }
 
   const onLogout = () => {
@@ -262,7 +282,7 @@ export default function My({ goTo }) {
                 <span className={s.tileUnit}> 문항</span>
               </span>
             </button>
-            <button type="button" className={s.tile} onClick={() => go('lobby', { sheet: 'mock' })}>
+            <button type="button" className={s.tile} onClick={() => setSheet('mock')}>
               <FileText size={22} strokeWidth={2} className={s.tileIcon} aria-hidden="true" />
               <span className={s.tileLabel}>모의고사</span>
               <span className={s.tileValue}>
@@ -369,6 +389,18 @@ export default function My({ goTo }) {
       )}
 
       {sheet === 'notice' && <NoticeSheet onClose={() => setSheet(null)} />}
+
+      {sheet === 'mock' && <MockSheet exams={getMockExams()} onStart={startMock} onClose={() => setSheet(null)} />}
+
+      {lesson && (
+        <LessonSheet
+          key={lessonRun}
+          lesson={lesson}
+          backLabel={`${TITLE}로 돌아가기`}
+          onClose={closeLesson}
+          onChange={refresh}
+        />
+      )}
     </div>
   )
 }
