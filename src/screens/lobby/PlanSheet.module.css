@@ -40,6 +40,14 @@
   color: var(--k);
 }
 
+/* 오늘 할 일 제목 줄. 오른쪽 끝에 '추가 >'(5개가 차면 '최대 5개') */
+.todoHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .todo {
   font-size: 15px;
   font-weight: 800;
@@ -54,17 +62,64 @@
   list-style: none;
 }
 
+/* 할 일 한 줄. 왼쪽(체크 칸과 글자)을 누르면 체크, 오른쪽 끝 '수정 >'을 누르면 고친다 */
 .item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
+  align-items: stretch;
   min-height: 52px;
-  padding: 10px 14px;
   border: 1.5px solid var(--line);
   border-radius: 12px;
   background: var(--w);
+}
+
+.check {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px 10px 14px;
+  border: 0;
+  border-radius: 12px 0 0 12px;
+  background: none;
+  color: var(--k);
   text-align: left;
+}
+
+/* '추가 >', '수정 >': 입체 버튼이 아니라 모의고사 시트의 '응시하기 >'와 같은 글자 버튼 */
+.action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px 0 6px;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--o);
+}
+
+/* 제목 줄의 '추가 >'는 아래 '수정 >'과 오른쪽 끝을 맞춘다 */
+.todoHead .action {
+  min-height: 36px;
+  padding: 0 11px 0 8px;
+}
+
+.chev {
+  flex-shrink: 0;
+  color: var(--k4);
+}
+
+/* 5개가 차면 '추가 >' 자리에 보인다. 높이는 '추가 >'와 같게, 오른쪽 끝은 '>' 끝에 맞춘다 */
+.full {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding-right: 17px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--k4);
 }
 
 .box {
@@ -94,14 +149,6 @@
 
 .textDone {
   color: var(--k5);
-}
-
-/* 작은 안내 글(자동 체크, 예시 기록). 시트의 칸 간격(16px)을 조금 좁혀 위 내용에 붙인다. */
-.hint {
-  margin-top: -6px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--k3);
 }
 
 /* 학습 리마인드 토글 */

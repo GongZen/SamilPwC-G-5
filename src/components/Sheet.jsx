@@ -7,6 +7,12 @@ import s from './Sheet.module.css'
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
+// 겹쳐 열린 시트 중 맨 위(가장 나중에 열린) 시트인지. 시트는 모두 열린 순서대로 #sheet-root에 붙는다
+function isTopSheet(box) {
+  const all = document.querySelectorAll('#sheet-root [role="dialog"]')
+  return all[all.length - 1] === box
+}
+
 // 아래에서 올라오는 시트. 앱 틀 전체(하단 탭 포함)를 덮는다.
 // title이 있으면 제목과 닫기 버튼을 그린다. 직접 머리 부분을 그리려면 title을 비우고 showClose={false}.
 // 제목을 직접 그릴 때는 ariaLabel로 화면 읽기 프로그램이 읽을 시트 이름을 준다.
@@ -28,16 +34,17 @@ export default function Sheet({
   const sheetRef = useRef(null)
 
   // Esc로 닫기. Tab은 시트 안에서만 돌게 한다.
+  // 시트가 겹쳐 열려 있으면(예: 진도 계획 위의 할 일 입력 창) 맨 위 시트만 키를 받는다.
   useEffect(() => {
     if (!open) return undefined
     const onKey = (e) => {
+      const box = sheetRef.current
+      if (!box || !isTopSheet(box)) return
       if (e.key === 'Escape') {
         onClose?.()
         return
       }
       if (e.key !== 'Tab') return
-      const box = sheetRef.current
-      if (!box) return
       const items = [...box.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null)
       if (items.length === 0) {
         e.preventDefault()

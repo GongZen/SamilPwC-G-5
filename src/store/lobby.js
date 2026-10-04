@@ -5,6 +5,7 @@
 // 추가한 함수
 // - getSelectedSubject(), setSelectedSubject(id): 로비에서 마지막으로 고른 과목
 // - getPlan(), togglePlanItem(id): 진도 계획의 '오늘 할 일'. 날짜가 바뀌면 체크가 모두 풀린다
+// - addPlanItem(text), updatePlanItem(id, text), removePlanItem(id): 오늘 할 일을 직접 추가, 수정, 삭제(최대 5개)
 // - getMockLesson(mockId): 모의고사 회차의 문항(과목을 섞은 묶음). 회차는 언제든 바로 응시할 수 있다
 // - saveMockResult(mockId, { correct, total }): 모의고사 회차 점수 저장(마지막 점수)
 //
@@ -22,6 +23,9 @@
 // - 연속 학습일은 단계 학습(복습 포함)을 끝낸 날 하루 한 번만 오른다. 하루를 건너뛰면 0으로 보이고 다음 학습 때 1부터 다시 센다
 // - 오늘 할 일: lesson 항목은 그 과목 단계를 끝내면, wrongReview 항목은 오답노트에서 정한 수만큼 '복습 완료'하면
 //   (남은 오답이 더 없으면 그때) 자동으로 체크된다. tab 항목(다른 탭에서 할 일)은 직접 체크한다
+// - 오늘 할 일은 사용자가 직접 추가, 수정, 삭제할 수 있다(최대 5개, 한 줄 30자). 한 번 바꾸면 data의 plan 대신
+//   이 기기에 저장한 목록을 쓴다. 새로 쓴 항목과 글자를 고친 기본 항목은 kind 'custom'이 되어 직접 체크한다.
+//   목록은 날이 바뀌어도 그대로 두고 체크만 풀린다
 // - 모의고사는 오픈 시각·알림 없이 언제든 응시한다. 회차마다 과목별 단계에서 1문항씩(회차끼리 겹치지 않게, 지금 20문항) 낸다
 // - 모의고사도 틀린 문항은 오답노트에 남는다. 진도와 연속 학습일은 바꾸지 않고, 회차 점수(마지막 점수)만 저장한다
 //
@@ -32,6 +36,7 @@
 // - lobby.today: 오늘 새 단계를 끝낸 과목. { date, subjects: { fin: true } }
 // - lobby.wrongNotes: 오답노트(최근 것이 앞)
 // - lobby.plan: 오늘 할 일. { date, done: [항목 id], reviewed: 오늘 '복습 완료'한 오답 수 }
+// - lobby.planItems: 직접 고친 오늘 할 일 목록(없으면 data의 plan을 쓴다). [{ id, kind, text, ... }]
 // - lobby.subject: 마지막으로 고른 과목 id
 // - lobby.mockScores: 모의고사 회차별 마지막 점수. { m1: { score, correct, total, at } }
 import { read, write } from './storage.js'
@@ -45,6 +50,7 @@ const K = {
   today: 'lobby.today',
   wrongNotes: 'lobby.wrongNotes',
   plan: 'lobby.plan',
+  planItems: 'lobby.planItems',
   subject: 'lobby.subject',
   mockScores: 'lobby.mockScores',
 }
@@ -57,6 +63,10 @@ const SUBJECTS = SUBJECT_LIST.flatMap((c) => {
   return [{ ...d, id: c.id, name: c.name, group: c.group, groupLabel: c.groupLabel }]
 })
 const PLAN_ITEMS = Array.isArray(data.plan) ? data.plan : []
+// 오늘 할 일은 최대 5개, 직접 쓰는 한 줄은 30자까지
+const PLAN_MAX = 5
+const PLAN_TEXT_MAX = 30
+const PLAN_KINDS = ['lesson', 'wrongReview', 'tab', 'custom']
 const MOCK_EXAMS = Array.isArray(data.mockExams) ? data.mockExams : []
 const SEED = data.seed || {}
 const SEED_NOTES = Array.isArray(SEED.wrongNotes) ? SEED.wrongNotes : []
@@ -170,6 +180,21 @@ function bumpStreak() {
 }
 
 // ---------- 오늘 할 일(진도 계획) 도우미 ----------
+
+// 지금 오늘 할 일 목록. 직접 고친 적이 없으면 data의 plan을 쓴다
+function planItems() {
+  const saved = read(K.planItems, null)
+  if (!Array.isArray(saved)) return PLAN_ITEMS
+  return saved
+    .filter((p) => p && typeof p === 'object' && typeof p.id === 'string' && PLAN_KINDS.includes(p.kind))
+    .filter((p) => p.kind !== 'custom' || String(p.text || '').trim())
+    .slice(0, PLAN_MAX)
+}
+
+// 직접 쓴 할 일 글자: 앞뒤 공백을 빼고 30자까지
+function planInput(text) {
+  return String(text ?? '').trim().slice(0, PLAN_TEXT_MAX)
+}
 
 function planState() {
   ensureSeeded()
@@ -305,7 +330,7 @@ export function saveLessonResult(subjectId, result = {}) {
     const t = todayState()
     write(K.today, { date: t.date, subjects: { ...t.subjects, [subject.id]: true } })
     // 진도 계획에서 이 과목의 학습 항목을 체크한다
-    const ids = PLAN_ITEMS.filter((p) => p.kind === 'lesson' && p.subjectId === subject.id).map((p) => p.id)
+    const ids = planItems().filter((p) => p.kind === 'lesson' && p.subjectId === subject.id).map((p) => p.id)
     if (ids.length > 0) {
       const plan = planState()
       writePlan({ ...plan, done: [...plan.done, ...ids] })
@@ -360,7 +385,7 @@ export function removeWrongNote(id) {
 
   const plan = planState()
   const next = { ...plan, reviewed: plan.reviewed + 1 }
-  const reached = PLAN_ITEMS.filter(
+  const reached = planItems().filter(
     (p) => p.kind === 'wrongReview' && next.reviewed >= reviewGoal(p, next, list.length),
   ).map((p) => p.id)
   writePlan({ ...next, done: [...next.done, ...reached] })
@@ -408,17 +433,24 @@ export function getProgress() {
 
 // ---------- 진도 계획 ----------
 
-/** 진도 계획의 오늘 할 일
- * @returns {{ items: Array<{ id: string, text: string, done: boolean }>, done: number, total: number }} */
+/** 진도 계획의 오늘 할 일. max: 할 일 최대 개수, maxText: 직접 쓰는 한 줄의 최대 글자 수(추가 필드)
+ * @returns {{ items: Array<{ id: string, text: string, done: boolean }>, done: number, total: number,
+ *   max: number, maxText: number }} */
 export function getPlan() {
   const p = planState()
   const remaining = readNotes().length
-  const items = PLAN_ITEMS.map((item) => ({
+  const items = planItems().map((item) => ({
     id: item.id,
     text: planText(item, p, remaining),
     done: p.done.includes(item.id),
   }))
-  return { items, done: items.filter((i) => i.done).length, total: items.length }
+  return {
+    items,
+    done: items.filter((i) => i.done).length,
+    total: items.length,
+    max: PLAN_MAX,
+    maxText: PLAN_TEXT_MAX,
+  }
 }
 
 /** 오늘 할 일 체크 켜고 끄기 @param {string} id */
@@ -426,6 +458,44 @@ export function togglePlanItem(id) {
   const p = planState()
   const done = p.done.includes(id) ? p.done.filter((x) => x !== id) : [...p.done, id]
   writePlan({ ...p, done })
+  return getPlan()
+}
+
+/** 오늘 할 일 직접 추가(맨 아래). 글자가 비었거나 이미 5개면 그대로 둔다 @param {string} text */
+export function addPlanItem(text) {
+  const t = planInput(text)
+  const list = planItems()
+  if (!t || list.length >= PLAN_MAX) return getPlan()
+  const id = `u${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
+  write(K.planItems, [...list, { id, kind: 'custom', text: t }])
+  return getPlan()
+}
+
+/** 오늘 할 일 글자 고치기. 글자가 바뀌면 'custom' 항목이 되어 자동 체크 없이 직접 체크한다(체크 상태는 그대로).
+ * 글자가 그대로면 아무것도 바꾸지 않는다(기본 항목의 자동 체크가 유지된다) @param {string} id @param {string} text */
+export function updatePlanItem(id, text) {
+  const t = planInput(text)
+  const list = planItems()
+  const item = list.find((p) => p.id === id)
+  if (!t || !item) return getPlan()
+  if (t === planText(item, planState(), readNotes().length)) return getPlan()
+  write(
+    K.planItems,
+    list.map((p) => (p.id === id ? { id, kind: 'custom', text: t } : p)),
+  )
+  return getPlan()
+}
+
+/** 오늘 할 일 삭제(오늘 체크 기록에서도 뺀다) @param {string} id */
+export function removePlanItem(id) {
+  const list = planItems()
+  if (!list.some((p) => p.id === id)) return getPlan()
+  write(
+    K.planItems,
+    list.filter((p) => p.id !== id),
+  )
+  const p = planState()
+  writePlan({ ...p, done: p.done.filter((x) => x !== id) })
   return getPlan()
 }
 

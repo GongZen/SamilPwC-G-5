@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { BookOpen, CalendarCheck, Check, ChevronDown, FileText, List, NotebookPen } from 'lucide-react'
 import {
+  addPlanItem,
   getLesson,
   getMockExams,
   getMockLesson,
@@ -10,9 +11,11 @@ import {
   getSubjects,
   getUnits,
   getWrongNotes,
+  removePlanItem,
   removeWrongNote,
   setSelectedSubject,
   togglePlanItem,
+  updatePlanItem,
 } from '../../store/lobby.js'
 import { getExam, getSettings, setSetting } from '../../store/user.js'
 import { EXAMS, SUBJECT_GROUPS } from '../../config.js'
@@ -21,6 +24,7 @@ import LearningPath from './LearningPath.jsx'
 import LessonSheet from './LessonSheet.jsx'
 import WrongNoteSheet from './WrongNoteSheet.jsx'
 import PlanSheet from './PlanSheet.jsx'
+import PlanItemSheet from './PlanItemSheet.jsx'
 import MockSheet from './MockSheet.jsx'
 import s from './Lobby.module.css'
 
@@ -39,6 +43,8 @@ export default function Lobby({ entry }) {
   const [sheet, setSheet] = useState(() => (SHEETS.includes(entry?.sheet) ? entry.sheet : null))
   const [lesson, setLesson] = useState(null) // getLesson() 또는 getMockLesson() 결과
   const [lessonRun, setLessonRun] = useState(0)
+  // 진도 계획 위에 여는 할 일 입력 창. { item: null }이면 추가, { item }이면 그 항목 수정
+  const [planEdit, setPlanEdit] = useState(null)
   const [toast, setToast] = useState(null) // { id, text }. 같은 말을 다시 띄워도 id가 바뀌어 시간이 새로 잡힌다
   const subjectBtnRef = useRef(null)
   const [, setVersion] = useState(0)
@@ -138,6 +144,25 @@ export default function Lobby({ entry }) {
   const togglePlan = (id) => {
     togglePlanItem(id)
     refresh()
+  }
+
+  // 할 일 입력 창에서 저장, 삭제하면 창을 닫고 진도 계획을 다시 그린다
+  const savePlanItem = (text) => {
+    if (planEdit?.item) updatePlanItem(planEdit.item.id, text)
+    else addPlanItem(text)
+    setPlanEdit(null)
+    refresh()
+  }
+
+  const deletePlanItem = () => {
+    if (planEdit?.item) removePlanItem(planEdit.item.id)
+    setPlanEdit(null)
+    refresh()
+  }
+
+  const closePlan = () => {
+    setPlanEdit(null)
+    setSheet(null)
   }
 
   const toggleSetting = (name) => {
@@ -298,8 +323,21 @@ export default function Lobby({ entry }) {
           plan={plan}
           remind={Boolean(settings.studyRemind)}
           onToggle={togglePlan}
+          onAdd={() => setPlanEdit({ item: null })}
+          onEdit={(item) => setPlanEdit({ item })}
           onToggleRemind={() => toggleSetting('studyRemind')}
-          onClose={() => setSheet(null)}
+          onClose={closePlan}
+        />
+      )}
+
+      {sheet === 'plan' && planEdit && (
+        <PlanItemSheet
+          key={planEdit.item?.id ?? 'new'}
+          item={planEdit.item}
+          maxLength={plan.maxText}
+          onSubmit={savePlanItem}
+          onDelete={deletePlanItem}
+          onClose={() => setPlanEdit(null)}
         />
       )}
 

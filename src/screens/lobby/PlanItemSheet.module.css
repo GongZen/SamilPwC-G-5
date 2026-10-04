@@ -1,0 +1,45 @@
+/* 오늘 할 일 추가, 수정 창. 입력란 모양은 간편 로그인 창(components/LoginSheet.module.css)과 같다 */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--k2);
+}
+
+.input {
+  height: 50px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--k);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--o);
+  background: var(--w);
+}
+
+/* 고칠 때만 보이는 '삭제'. 입체 버튼이 아닌 글자 버튼(MY의 로그아웃과 같은 색) */
+.remove {
+  align-self: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  background: none;
+  color: var(--k3);
+  font-size: 15px;
+  font-weight: 600;
+}
