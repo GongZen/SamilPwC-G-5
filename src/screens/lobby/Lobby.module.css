@@ -190,14 +190,6 @@
 }
 
 /* 고른 연차의 과목이 아직 없을 때 메뉴 아래 안내 */
-.menuNote {
-  padding: 8px 12px 4px;
-  border-top: 1px solid var(--line);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--k3);
-}
-
 /* 메뉴 바깥을 누르면 닫히게 하는 투명한 층 */
 .menuDim {
   position: absolute;

@@ -18,7 +18,7 @@ import {
   updatePlanItem,
 } from '../../store/lobby.js'
 import { getExam, getSettings, setSetting } from '../../store/user.js'
-import { EXAMS, SUBJECT_GROUPS } from '../../config.js'
+import { SUBJECT_GROUPS } from '../../config.js'
 import { lobbyLines } from './mascotLines.js'
 import LearningPath from './LearningPath.jsx'
 import LessonSheet from './LessonSheet.jsx'
@@ -89,9 +89,6 @@ export default function Lobby({ entry }) {
   const mocks = getMockExams()
   const mockDone = mocks.filter((m) => m.done).length
   const settings = getSettings()
-  // MY에서 고른 연차의 과목이 아직 없으면(예: 2년차) 과목 메뉴 아래에 준비 중이라고 알린다
-  const year = EXAMS[exam.year] ? Number(exam.year) : 1
-  const hasYearSubjects = subjects.some((x) => x.ready && Number(x.year) === year)
   const mascotLines = lobbyLines({
     subject,
     units,
@@ -226,7 +223,6 @@ export default function Lobby({ entry }) {
                 </div>
               )
             })}
-            {!hasYearSubjects && <p className={s.menuNote}>{exam.short} 과목은 준비 중이에요</p>}
           </div>
         )}
       </header>

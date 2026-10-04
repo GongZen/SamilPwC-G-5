@@ -20,6 +20,9 @@
 // - 단계마다 자기 문항만 쓴다. 문항이 없는 단계는 count가 0이고 열리지 않는다('문항 준비 중')
 // - 한 과목은 하루에 새 단계 하나만 연다. 끝내면 다음 단계는 '내일 학습 오픈'이 된다
 // - 이미 끝낸 단계는 언제든 다시 풀 수 있다(복습). 복습은 진도를 올리지 않는다
+// - 단계 진도(lobby.progress)와 '하루 한 단계' 기록(lobby.today)은 MY에서 고른 연차별로 따로 저장한다.
+//   1년차는 예전 키 그대로, 2년차는 키 끝에 '.y2'를 붙인다. 예시 진도는 1년차에만 넣고 2년차는 빈 상태로 시작한다.
+//   문항, 연속 학습일, 오답노트, 모의고사 점수, 진도 계획은 두 연차가 함께 쓴다
 // - 연속 학습일은 단계 학습(복습 포함)을 끝낸 날 하루 한 번만 오른다. 하루를 건너뛰면 0으로 보이고 다음 학습 때 1부터 다시 센다
 // - 오늘 할 일: lesson 항목은 그 과목 단계를 끝내면, wrongReview 항목은 오답노트에서 정한 수만큼 '복습 완료'하면
 //   (남은 오답이 더 없으면 그때) 자동으로 체크된다. tab 항목(다른 탭에서 할 일)은 직접 체크한다
@@ -31,15 +34,16 @@
 //
 // 저장 키(모두 'lobby.'로 시작)
 // - lobby.seeded: 시작 값을 넣었는지
-// - lobby.progress: 과목별로 끝낸 단계 수. 예: { fin: 2, audit: 2, tax: 2 }
+// - lobby.progress: 과목별로 끝낸 단계 수(1년차). 예: { fin: 2, audit: 2, tax: 2 }. 2년차는 lobby.progress.y2
 // - lobby.streak: 연속 학습일. { count, last: 마지막으로 학습한 날짜 'YYYY-MM-DD' }
-// - lobby.today: 오늘 새 단계를 끝낸 과목. { date, subjects: { fin: true } }
+// - lobby.today: 오늘 새 단계를 끝낸 과목(1년차). { date, subjects: { fin: true } }. 2년차는 lobby.today.y2
 // - lobby.wrongNotes: 오답노트(최근 것이 앞)
 // - lobby.plan: 오늘 할 일. { date, done: [항목 id], reviewed: 오늘 '복습 완료'한 오답 수 }
 // - lobby.planItems: 직접 고친 오늘 할 일 목록(없으면 data의 plan을 쓴다). [{ id, kind, text, ... }]
 // - lobby.subject: 마지막으로 고른 과목 id
 // - lobby.mockScores: 모의고사 회차별 마지막 점수. { m1: { score, correct, total, at } }
 import { read, write } from './storage.js'
+import { getSettings } from './user.js'
 import { DEFAULT_SUBJECT_ID, SUBJECTS as SUBJECT_LIST, TABS, currentSubjectName } from '../config.js'
 import data from '../data/lobby.json'
 
@@ -99,6 +103,7 @@ function daysBetween(from, to) {
 
 function ensureSeeded() {
   if (read(K.seeded, false)) return
+  // 예시 진도는 1년차 기록에만 넣는다(2년차는 빈 상태로 시작)
   write(K.progress, { ...(SEED.progress || {}) })
   // 어제까지 연속으로 공부한 상태로 시작한다. 오늘 단계 하나를 끝내면 하루가 오른다.
   write(K.streak, { count: Number(SEED.streak) || 0, last: dateKey(daysFromNow(-1)) })
@@ -120,23 +125,35 @@ function tabLabel(id) {
   return TABS.find((t) => t.id === id)?.label || ''
 }
 
+// 지금 MY에서 고른 연차(1, 2). 단계 진도와 '하루 한 단계' 기록은 연차별로 따로 둔다
+function currentYear() {
+  const year = Number(getSettings().year)
+  return Number.isInteger(year) && year > 1 ? year : 1
+}
+
+// 연차별 저장 키. 1년차는 예전 키 그대로, 2년차부터는 끝에 '.y2'처럼 연차를 붙인다
+function yearKey(base) {
+  const year = currentYear()
+  return year > 1 ? `${base}.y${year}` : base
+}
+
 function progressMap() {
   ensureSeeded()
-  const map = read(K.progress, {})
+  const map = read(yearKey(K.progress), {})
   return map && typeof map === 'object' ? map : {}
 }
 
-// 과목에서 끝낸 단계 수(0 ~ 단계 수)
+// 과목에서 끝낸 단계 수(0 ~ 단계 수). 저장된 값이 없으면 1년차는 예시 진도, 2년차는 0
 function doneCount(subject, map = progressMap()) {
   const stored = Number(map[subject.id])
-  const fallback = Number(SEED.progress?.[subject.id]) || 0
+  const fallback = currentYear() === 1 ? Number(SEED.progress?.[subject.id]) || 0 : 0
   const n = Number.isFinite(stored) ? stored : fallback
   return Math.max(0, Math.min(subject.nodes.length, Math.floor(n)))
 }
 
 function todayState() {
   const key = dateKey()
-  const t = read(K.today, null)
+  const t = read(yearKey(K.today), null)
   return t && t.date === key && t.subjects ? t : { date: key, subjects: {} }
 }
 
@@ -326,9 +343,9 @@ export function saveLessonResult(subjectId, result = {}) {
   const index = Number.isInteger(result.nodeIndex) ? result.nodeIndex : done
   let advanced = false
   if (index === done && done < subject.nodes.length && !isDoneToday(subject.id)) {
-    write(K.progress, { ...map, [subject.id]: done + 1 })
+    write(yearKey(K.progress), { ...map, [subject.id]: done + 1 })
     const t = todayState()
-    write(K.today, { date: t.date, subjects: { ...t.subjects, [subject.id]: true } })
+    write(yearKey(K.today), { date: t.date, subjects: { ...t.subjects, [subject.id]: true } })
     // 진도 계획에서 이 과목의 학습 항목을 체크한다
     const ids = planItems().filter((p) => p.kind === 'lesson' && p.subjectId === subject.id).map((p) => p.id)
     if (ids.length > 0) {
