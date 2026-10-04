@@ -218,7 +218,8 @@ export default function My({ goTo }) {
               <p className={s.examName}>{examLabel}</p>
               <p className={s.dday}>{exam.dday}</p>
             </div>
-            {examDate && <p className={s.examDate}>시험일 {examDate}</p>}
+            {/* 날짜만 쓴다('시험일' 글자를 빼서 왼쪽 시험 이름이 한 줄에 들어갈 자리를 넓힌다) */}
+            {examDate && <p className={s.examDate}>{examDate}</p>}
           </div>
           <div className={s.overall}>
             <p className={s.overallRow}>
