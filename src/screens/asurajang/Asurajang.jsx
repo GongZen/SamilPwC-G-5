@@ -72,12 +72,14 @@ export default function Asurajang({ goTo, goBack }) {
     saveResult(toResult(game, round))
   }, [round, ended, game])
 
-  const start = (practice) => {
+  // participants가 없으면(연습 모드로 다시 도전) 직전 판과 같은 인원으로 시작한다
+  const start = (practice, participants) => {
     const now = Date.now()
-    setGame((g) => enter(g, round, now, practice))
+    setGame((g) => enter(g, round, now, practice, participants ?? g.participants))
   }
 
-  const onEnter = () => requireLogin(() => start(false))
+  // 입장하기를 누른 순간 대기실에 보이던 인원으로 시작한다(로그인 창을 거쳐도 그 인원 그대로)
+  const onEnter = (count) => requireLogin(() => start(false, count))
   const onRetry = () => start(true)
 
   const onPick = (index) => {

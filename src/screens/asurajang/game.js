@@ -33,9 +33,11 @@ export function isRunning(game) {
   return game.phase === 'ready' || game.phase === 'play'
 }
 
-/** 입장(또는 다시 도전): 시작 카운트다운부터 */
-export function enter(game, round, now, practice) {
-  const n = round.config.maxParticipants
+/** 입장(또는 다시 도전): 시작 카운트다운부터.
+ * participants: 시작 인원(대기실에서 입장 버튼을 누른 순간 보이던 인원). 없으면 상한(config.maxParticipants) */
+export function enter(game, round, now, practice, participants) {
+  const cap = round.config.maxParticipants
+  const n = Math.max(1, Math.min(cap, Math.round(Number(participants) || cap)))
   return {
     ...initGame(),
     id: game.id + 1,

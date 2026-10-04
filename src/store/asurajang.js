@@ -9,8 +9,11 @@ import data from '../data/asurajang.json'
 const BEST_KEY = 'asurajang.best'
 const RESULTS_KEY = 'asurajang.results'
 const MAX_RESULTS = 20
-// 참가자 총수 상한(저장소 규칙 3절). data 파일에 더 큰 값을 넣어도 300명으로 맞춘다.
-const MAX_PARTICIPANTS = 300
+// 참가자 총수 상한(저장소 규칙 3절). data 파일에 더 큰 값을 넣어도 302명으로 맞춘다.
+const MAX_PARTICIPANTS = 302
+// 대기실 입장 알림 기본값(data에 crowd가 없거나 비었을 때)
+const DEFAULT_LOS = ['Assurance', 'Deals', 'Tax', 'Digital']
+const DEFAULT_NAMES = ['김도윤', '이준서', '박지호', '최예은']
 const OUT_REASONS = ['wrong', 'timeout', 'left']
 
 function text(value) {
@@ -35,11 +38,14 @@ function toQuestion(item) {
  * - tagline: 대기실 카드 맨 위 작은 글자, prize: 경품 이름(비우면 표시하지 않음), resultNotice: 우승 화면 공지 안내
  * - config.survivalRates: 문제마다 다음 문제로 넘어가는 생존 비율. 문항이 더 많으면 마지막 값을 다시 쓴다
  * - config.leaveEliminates: true면 퀴즈 도중 화면을 벗어날 때 탈락, config.revealSeconds: 정답 공개 후 다음 문제까지 초
+ * - crowd: 대기실 입장 알림(가상 참가자). start는 처음 보이는 대기 인원 범위 [최소, 최대](상한 이하),
+ *   los와 names로 'Assurance Los 김도윤 님 입장' 같은 문구를 만든다(추가 필드)
  * @returns {{ title: string, subtitle: string, scheduleLabel: string, subjectsLabel: string,
  *   tagline: string, prize: string, resultNotice: string,
  *   questions: Array<{ subject: string, q: string, o: string[], a: number, ex: string }>,
  *   config: { maxParticipants: number, secondsPerQuestion: number, countdown: number,
- *     survivalRates: number[], leaveEliminates: boolean, revealSeconds: number } } | null} */
+ *     survivalRates: number[], leaveEliminates: boolean, revealSeconds: number },
+ *   crowd: { start: [number, number], los: string[], names: string[] } } | null} */
 export function getRound() {
   const round = data.round
   if (!round || typeof round !== 'object') return null
@@ -48,6 +54,14 @@ export function getRound() {
 
   const c = round.config || {}
   const rates = (Array.isArray(c.survivalRates) ? c.survivalRates : []).map((v) => clamp(v, 0, 1, 1))
+  const cap = Math.round(clamp(c.maxParticipants, 1, MAX_PARTICIPANTS, MAX_PARTICIPANTS))
+  const cr = round.crowd || {}
+  const range = Array.isArray(cr.start) ? cr.start : []
+  const startMin = Math.round(clamp(range[0], 1, cap, Math.max(1, cap - 64)))
+  const startMax = Math.round(clamp(range[1], startMin, cap, Math.max(startMin, cap - 50)))
+  const words = (v) => (Array.isArray(v) ? v.map(text).map((x) => x.trim()).filter(Boolean) : [])
+  const los = words(cr.los)
+  const names = words(cr.names)
   const subjects = [...new Set(questions.map((q) => q.subject).filter(Boolean))].join(' · ')
 
   return {
@@ -60,12 +74,17 @@ export function getRound() {
     resultNotice: text(round.resultNotice),
     questions,
     config: {
-      maxParticipants: Math.round(clamp(c.maxParticipants, 1, MAX_PARTICIPANTS, MAX_PARTICIPANTS)),
+      maxParticipants: cap,
       secondsPerQuestion: Math.round(clamp(c.secondsPerQuestion, 3, 60, 10)),
       countdown: Math.round(clamp(c.countdown, 1, 10, 3)),
       survivalRates: rates.length > 0 ? rates : [1],
       leaveEliminates: c.leaveEliminates !== false,
       revealSeconds: clamp(c.revealSeconds, 0.5, 10, 2.2),
+    },
+    crowd: {
+      start: [startMin, startMax],
+      los: los.length > 0 ? los : DEFAULT_LOS,
+      names: names.length > 0 ? names : DEFAULT_NAMES,
     },
   }
 }

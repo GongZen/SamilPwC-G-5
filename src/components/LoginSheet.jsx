@@ -3,7 +3,7 @@ import Sheet from './Sheet.jsx'
 import Button3D from './Button3D.jsx'
 import s from './LoginSheet.module.css'
 
-// 간편 로그인: 이름과 부서만 받는다. 비밀번호와 회원가입은 없다.
+// 간편 로그인: 이름과 Los(소속, 코드에서는 dept)만 받는다. 비밀번호와 회원가입은 없다.
 // 입력값은 이 기기(localStorage)에만 저장된다(안내는 MY 공지사항에 있다). 창에는 입력란 두 개와 시작하기 버튼만 둔다.
 export default function LoginSheet({ open, onClose, onSubmit }) {
   const [name, setName] = useState('')
@@ -32,7 +32,7 @@ export default function LoginSheet({ open, onClose, onSubmit }) {
           />
         </label>
         <label className={s.field}>
-          <span className={s.label}>부서</span>
+          <span className={s.label}>Los</span>
           <input
             className={s.input}
             value={dept}
