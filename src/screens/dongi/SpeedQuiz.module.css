@@ -1,0 +1,389 @@
+/* 스피드 퀴즈. 시트(Sheet)를 화면 전체 크기로 펼쳐 쓴다(하단 탭까지 덮음) */
+.full.full {
+  height: 100%;
+  max-height: none;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.head {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: calc(10px + env(safe-area-inset-top)) 10px 4px;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.close {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--k2);
+}
+
+/* 참가자 점수판 */
+.players {
+  flex-shrink: 0;
+  display: grid;
+  gap: 8px;
+  padding: 8px 16px 10px;
+}
+
+.pl {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.plMe {
+  background: var(--o-soft);
+  box-shadow: inset 0 0 0 1.5px var(--o-line);
+}
+
+.plName {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plScore {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--o);
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 16px calc(20px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 28px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+/* 정답 화면에서 다음 문제까지 남은 초 */
+.count {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o-dk);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.count b {
+  color: var(--o);
+  font-size: 17px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 남은 시간 막대: 처음엔 가득 차 있다가 --limit 동안 줄어든다 */
+.timer {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+}
+
+.timer > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--o);
+  transform-origin: left center;
+  animation: drain var(--limit) linear forwards;
+}
+
+.timerWait > span {
+  background: var(--k4);
+}
+
+@keyframes drain {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.subj {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.qText {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--w);
+  box-shadow: 0 3px 0 var(--line);
+  color: var(--k);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.opt:disabled {
+  cursor: default;
+}
+
+.num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--k2);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.txt {
+  flex: 1;
+  min-width: 0;
+}
+
+.who {
+  flex-shrink: 0;
+  display: flex;
+  gap: 3px;
+}
+
+/* 내가 고른 보기(정답 공개 전) */
+.optPicked {
+  border-color: var(--o);
+  background: var(--o-soft);
+  box-shadow: 0 3px 0 var(--o-line);
+}
+
+.optPicked .num {
+  background: var(--o);
+  color: var(--w);
+}
+
+.optOk {
+  border-color: var(--ok);
+  background: var(--ok-tint);
+  box-shadow: 0 3px 0 var(--ok-line);
+}
+
+.optOk .num {
+  background: var(--ok);
+  color: var(--w);
+}
+
+.optNg {
+  border-color: var(--ng);
+  background: var(--ng-tint);
+  box-shadow: 0 3px 0 var(--ng-line);
+}
+
+.optNg .num {
+  background: var(--ng);
+  color: var(--w);
+}
+
+/* 이번 문제 결과(점수 높은 순) */
+.reveal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--r-card);
+  background: var(--bg);
+}
+
+.rv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rvName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rvRes {
+  flex-shrink: 0;
+  color: var(--k3);
+  font-weight: 600;
+}
+
+.rvPts {
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: right;
+  font-weight: 800;
+  color: var(--o);
+}
+
+.rvMiss .rvPts {
+  color: var(--k4);
+}
+
+/* 최종 순위 */
+.resBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 8px 16px 16px;
+  overflow-y: auto;
+}
+
+.resTitle {
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.resSub {
+  font-size: 13px;
+  color: var(--k3);
+  text-align: center;
+}
+
+.podium {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-big);
+  background: var(--w);
+}
+
+.first {
+  border-color: var(--o);
+  background: var(--o-soft);
+}
+
+.prowMe {
+  box-shadow: inset 0 0 0 1.5px var(--o-line);
+}
+
+.place {
+  flex-shrink: 0;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--k2);
+}
+
+.first .place {
+  color: var(--o);
+}
+
+.pinfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pname {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.pstat {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.ppts {
+  flex-shrink: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--o);
+  font-variant-numeric: tabular-nums;
+}
+
+.ppts small {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+.resFoot {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 16px calc(18px + env(safe-area-inset-bottom));
+}

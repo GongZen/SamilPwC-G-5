@@ -1,0 +1,334 @@
+/* 동기들. 바탕은 MY처럼 옅은 회색(--bg)이고 앱 틀이 로고 줄도 같은 색으로 맞춘다(config.js의 TAB_SURFACE) */
+.screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 16px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll > * {
+  flex-shrink: 0;
+}
+
+/* 머리: 동기들 ---- 관리 > */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 4px 2px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
+}
+
+.textBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 0 2px 0 8px;
+  border: 0;
+  background: none;
+  color: var(--o);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.chev {
+  color: var(--k4);
+}
+
+/* 전체 진도 카드 */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-big);
+  background: var(--w);
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.cardMeta {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 한 줄: 순위, 얼굴, 이름과 Los, 진도 %. 아래에 진도 바 */
+.rowIn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+button.rowIn:active {
+  opacity: 0.7;
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank {
+  width: 18px;
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--k3);
+  text-align: center;
+}
+
+.rankTop {
+  color: var(--o);
+}
+
+.who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.los {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pct {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--k2);
+}
+
+.bar {
+  display: block;
+  height: 8px;
+  margin-left: 58px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--line2);
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--o);
+}
+
+/* 내 줄은 옅은 오렌지 면으로 구분한다 */
+.me {
+  margin: -8px -10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--o-soft);
+}
+
+.me .bar > span {
+  background: var(--o-dk);
+}
+
+/* 접속 중: 진도 바 위로 빛이 천천히 지나간다(한 바퀴 2.8초) */
+.online .bar > span {
+  background: linear-gradient(90deg, var(--o) 0%, var(--o) 35%, #fdba74 50%, var(--o) 65%, var(--o) 100%);
+  background-size: 250% 100%;
+  animation: shimmer 2.8s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -150% 0;
+  }
+}
+
+.empty {
+  padding: 6px 0 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--k3);
+}
+
+/* 스피드 퀴즈 배너: 글자 한 줄만, 가로세로 가운데 */
+.game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 64px;
+  margin-bottom: 5px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--r-big);
+  background: var(--o);
+  box-shadow: 0 5px 0 var(--o-dk);
+  color: var(--w);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.game:active {
+  transform: translateY(5px);
+  box-shadow: none;
+}
+
+/* 찌르는 순간 잠깐 떴다가 사라지는 사진(배경 없는 피사체만) */
+.pokeFx {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.pokeFx img {
+  width: 94%;
+  max-width: 380px;
+  filter: drop-shadow(0 10px 24px rgba(31, 26, 23, 0.28));
+}
+
+/* 찔린 동기 휴대폰에 가는 알림 예시(맨 위) */
+.push {
+  position: absolute;
+  top: calc(10px + env(safe-area-inset-top));
+  left: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 10px 30px rgba(31, 26, 23, 0.25);
+  animation: drop 0.25s ease-out;
+}
+
+.pushHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--k3);
+}
+
+.pushHead img {
+  height: 11px;
+}
+
+.pushTitle {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pushText {
+  font-size: 13px;
+  color: var(--k2);
+}
+
+.pushNote {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--o);
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* 짧은 안내(하단 탭 위) */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 32px);
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  background: rgba(31, 26, 23, 0.88);
+  color: var(--w);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .online .bar > span,
+  .push {
+    animation: none;
+  }
+}

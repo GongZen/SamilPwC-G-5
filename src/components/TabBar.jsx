@@ -1,10 +1,11 @@
 import { House, Lightbulb, Swords, UserRound } from 'lucide-react'
 import { TABS } from '../config.js'
+import UsersThreeIcon from './UsersThreeIcon.jsx'
 import s from './TabBar.module.css'
 
-const ICONS = { lobby: House, samchocut: Lightbulb, asurajang: Swords, my: UserRound }
+const ICONS = { lobby: House, samchocut: Lightbulb, asurajang: Swords, dongi: UsersThreeIcon, my: UserRound }
 
-// 하단 탭 4개. 이름은 config.js의 TABS에서 가져온다.
+// 하단 탭(지금 5개). 이름과 순서는 config.js의 TABS에서 가져오고, 칸은 탭 수만큼 똑같이 나눈다.
 export default function TabBar({ current, onSelect }) {
   return (
     <nav className={s.bar} aria-label="주요 메뉴">

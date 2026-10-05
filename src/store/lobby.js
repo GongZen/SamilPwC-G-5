@@ -8,6 +8,7 @@
 // - addPlanItem(text), updatePlanItem(id, text), removePlanItem(id): 오늘 할 일을 직접 추가, 수정, 삭제(최대 5개)
 // - getMockLesson(mockId): 모의고사 회차의 문항(과목을 섞은 묶음). 회차는 언제든 바로 응시할 수 있다
 // - saveMockResult(mockId, { correct, total }): 모의고사 회차 점수 저장(마지막 점수)
+// - getQuestionBank(): 모든 과목의 문항 사본(과목 이름 포함). 동기들 탭의 스피드 퀴즈가 쓴다
 //
 // 과목
 // - 과목 이름, 순서, 묶음(직업윤리, 실무역량)은 config.js의 SUBJECT_GROUPS가 정한다. data/lobby.json은 id로 단원과 단계를 붙인다
@@ -511,6 +512,16 @@ export function removePlanItem(id) {
   const p = planState()
   writePlan({ ...p, done: p.done.filter((x) => x !== id) })
   return getPlan()
+}
+
+// ---------- 전체 문항 ----------
+
+/** 모든 과목의 문항 사본(동기들 스피드 퀴즈에서 씀)
+ * @returns {Array<{ q: string, o: string[], a: number, ex: string, subject: string, source: string }>} */
+export function getQuestionBank() {
+  return SUBJECTS.flatMap((s) =>
+    s.nodes.flatMap((n) => (Array.isArray(n.questions) ? n.questions : []).map((q) => copyQuestion(q, s))),
+  )
 }
 
 // ---------- 모의고사 ----------

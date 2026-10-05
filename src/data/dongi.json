@@ -1,0 +1,24 @@
+{
+  "_note": "동기들 탭 데이터. 서버가 없어 동기들의 진도, 접속 여부, 스피드 퀴즈 상대의 답과 속도는 모두 시연용 가상 값이다(MY 공지사항에 밝힌다). team은 처음부터 등록된 동기로 G-5 팀 9명이다(공개 저장소 실명 예외, CLAUDE.md 1절). los는 실제 소속, pct는 정해 둔 전체 진도(%)로 설제은, 송윤근은 77, 나머지는 76 이하에서 한 번 무작위로 뽑았다. online은 지금 접속 중으로 보일 동기 id다(얼굴 테두리가 얼굴 색으로 빛나고 진도 바에 빛이 지나간다). 동기 찾기에 나오는 나머지 동기는 아수(습)라장 대기실의 가상 참가자 이름(data/asurajang.json의 crowd)을 쓴다. quiz는 스피드 퀴즈 설정이다. rounds는 문제 수, seconds는 문제당 제한 시간(초, 다 지나야 정답 공개), revealSeconds는 정답 화면을 보여 주는 시간(초, 끝나면 다음 문제로), maxPick은 함께할 동기 최대 수(나 포함 maxPick+1명), maxQuestionLength와 maxOptionLength는 삼일 끝내기 문항 중 퀴즈에 쓸 짧은 문항의 글자 수 기준이다. poke는 접속하지 않은 동기를 눌렀을 때 나오는 문구와 버튼 글자, 푹 찌르기를 누르면 뜨는 사진(assets/dongi/poke.png)을 보여 주는 시간(초)이다.",
+  "team": [
+    { "id": "t1", "name": "정웅희", "los": "Assurance", "pct": 19 },
+    { "id": "t2", "name": "심정보", "los": "Deals", "pct": 12 },
+    { "id": "t3", "name": "윤민아", "los": "Tax", "pct": 76 },
+    { "id": "t4", "name": "김혜진", "los": "Assurance", "pct": 50 },
+    { "id": "t5", "name": "김재영", "los": "Assurance", "pct": 32 },
+    { "id": "t6", "name": "박형근", "los": "Assurance", "pct": 70 },
+    { "id": "t7", "name": "박현웅", "los": "Assurance", "pct": 52 },
+    { "id": "t8", "name": "설제은", "los": "Assurance", "pct": 77 },
+    { "id": "t9", "name": "송윤근", "los": "Tax", "pct": 77 }
+  ],
+  "online": ["t8", "t9", "t3", "t6", "t4"],
+  "quiz": {
+    "rounds": 10,
+    "seconds": 10,
+    "revealSeconds": 5,
+    "maxPick": 3,
+    "maxQuestionLength": 46,
+    "maxOptionLength": 18
+  },
+  "poke": { "message": "시험이 얼마나 남았다고 잠이 오냐?", "button": "푹 찌르기", "imageSeconds": 0.3 }
+}

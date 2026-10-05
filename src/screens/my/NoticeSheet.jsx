@@ -4,6 +4,7 @@ import { readSources } from './myData.js'
 import s from './NoticeSheet.module.css'
 
 const ARENA = TABS.find((t) => t.id === 'asurajang')?.label ?? ''
+const DONGI = TABS.find((t) => t.id === 'dongi')?.label ?? ''
 
 // 공지사항: 시연용 앱이라는 사실과 기록이 저장되는 방식을 알린다.
 // 디자인에는 이 시트가 없어서 임시 문구로 만들었다. 문구는 콘텐츠팀이 확정한다.
@@ -27,6 +28,11 @@ function notices() {
       id: 'arena',
       title: `${ARENA} 참가자 안내`,
       body: '함께 겨루는 참가자, 대기실 입장 알림에 나오는 이름과 Los, 생존자 수는 모두 가상으로 만든 시뮬레이션이에요.',
+    },
+    {
+      id: 'dongi',
+      title: `${DONGI} 안내`,
+      body: '동기들의 진도와 접속 표시, 스피드 퀴즈 상대의 답과 속도는 시연용 가상 값이에요. 찌르기를 눌러도 실제 알림은 가지 않아요.',
     },
     {
       id: 'alert',

@@ -7,6 +7,7 @@ export const TABS = [
   { id: 'lobby', label: '삼일 끝내기' },
   { id: 'samchocut', label: '삼초컷' },
   { id: 'asurajang', label: '아수(습)라장' },
+  { id: 'dongi', label: '동기들' },
   { id: 'my', label: 'MY' },
 ]
 
@@ -14,7 +15,7 @@ export const TABS = [
 export const FULLSCREEN_TABS = ['asurajang']
 
 // 바탕이 흰색이 아닌 탭. 맨 위 로고 줄도 같은 색으로 맞춘다.
-export const TAB_SURFACE = { my: 'bg' }
+export const TAB_SURFACE = { dongi: 'bg', my: 'bg' }
 
 // 과목 구성(종합평가 과목 체계). 화면에 보이는 과목 이름과 순서는 여기 한 곳에서 바꾼다.
 // id는 코드 식별자라 바꾸지 않는다. 문항이 아직 없는 과목도 목록에 보이고 눌리며 '준비 중'으로 표시한다.

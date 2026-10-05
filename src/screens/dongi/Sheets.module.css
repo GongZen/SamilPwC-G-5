@@ -1,0 +1,177 @@
+/* 동기들의 시트(관리, 스피드 퀴즈 준비, 찌르기)가 같이 쓰는 모양 */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--k2);
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--k3);
+}
+
+/* 이름 검색 */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--k4);
+}
+
+.search:focus-within {
+  border-color: var(--o);
+  background: var(--w);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--k);
+  font: inherit;
+  font-size: 15px;
+}
+
+/* 동기 한 줄(관리) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 6px 8px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+}
+
+.who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.sub {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--k3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* '추가 >', '삭제': 입체 버튼이 아닌 글자 버튼 */
+.act {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--o);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.del {
+  color: var(--k3);
+}
+
+.chev {
+  color: var(--k4);
+}
+
+/* 스피드 퀴즈 준비 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--o-tint);
+  color: var(--o-dk);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--w);
+  color: var(--k);
+  text-align: left;
+}
+
+.pickOn {
+  border-color: var(--o);
+  background: var(--o-soft);
+}
+
+.pick:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.box {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--line4);
+  border-radius: 7px;
+  background: var(--w);
+  color: var(--w);
+}
+
+.pickOn .box {
+  border-color: var(--o);
+  background: var(--o);
+}
+
+/* 찌르기 */
+.poke {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0 4px;
+  text-align: center;
+}
+
+.pokeMsg {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.4;
+}

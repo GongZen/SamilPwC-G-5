@@ -7,11 +7,12 @@ import InstallBanner from './components/InstallBanner.jsx'
 import Lobby from './screens/lobby/Lobby.jsx'
 import Samchocut from './screens/samchocut/Samchocut.jsx'
 import Asurajang from './screens/asurajang/Asurajang.jsx'
+import Dongi from './screens/dongi/Dongi.jsx'
 import My from './screens/my/My.jsx'
 import pwcLogo from './assets/brand/pwc.png'
 import s from './App.module.css'
 
-const SCREENS = { lobby: Lobby, samchocut: Samchocut, asurajang: Asurajang, my: My }
+const SCREENS = { lobby: Lobby, samchocut: Samchocut, asurajang: Asurajang, dongi: Dongi, my: My }
 
 // 주소 끝에 ?tab=samchocut 처럼 붙이면 그 탭으로 바로 연다(확인·캡처용)
 function initialTab() {

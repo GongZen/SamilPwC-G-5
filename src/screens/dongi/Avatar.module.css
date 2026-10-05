@@ -1,0 +1,63 @@
+/* 동기 얼굴. 색(--c)과 크기(--size)는 Avatar.jsx가 정한다 */
+.avatar {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: var(--c);
+  color: var(--w);
+  font-size: calc(var(--size) * 0.42);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* 접속 중: 흰 틈 바깥으로 얼굴 색 테두리가 숨 쉬듯 퍼졌다 줄어든다 */
+.ring {
+  box-shadow:
+    0 0 0 2px var(--w),
+    0 0 0 4px var(--c);
+  animation: ring 1.8s ease-in-out infinite;
+}
+
+@keyframes ring {
+  50% {
+    box-shadow:
+      0 0 0 2px var(--w),
+      0 0 0 7px color-mix(in srgb, var(--c) 30%, transparent);
+  }
+}
+
+/* 스피드 퀴즈에서 얼굴 오른쪽 아래에 붙는 표시 */
+.mark {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--w);
+  border-radius: 50%;
+  color: var(--w);
+}
+
+.ok {
+  background: var(--ok);
+}
+
+.ng {
+  background: var(--ng);
+}
+
+.done {
+  background: var(--k4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+  }
+}
