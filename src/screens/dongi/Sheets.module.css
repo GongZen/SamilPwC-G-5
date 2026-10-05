@@ -17,13 +17,14 @@
   color: var(--k3);
 }
 
-/* 이름 검색 */
+/* 이름 검색. 시트 안 목록이 길어 넘쳐도 눌려 작아지지 않게 flex-shrink: 0 */
 .search {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 48px;
-  padding: 0 14px;
+  gap: 10px;
+  height: 56px;
+  padding: 0 16px;
   border: 1.5px solid var(--line);
   border-radius: 12px;
   background: var(--bg);
@@ -44,16 +45,16 @@
   background: none;
   color: var(--k);
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 /* 동기 한 줄(관리) */
 .row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 52px;
-  padding: 8px 6px 8px 12px;
+  gap: 12px;
+  min-height: 68px;
+  padding: 12px 8px 12px 14px;
   border: 1.5px solid var(--line);
   border-radius: 12px;
 }
@@ -64,6 +65,10 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
+}
+
+.row .who {
+  gap: 3px;
 }
 
 .name {
@@ -86,8 +91,8 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  min-height: 36px;
-  padding: 0 8px;
+  min-height: 44px;
+  padding: 0 10px;
   border: 0;
   background: none;
   color: var(--o);

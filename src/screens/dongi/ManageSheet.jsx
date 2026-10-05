@@ -32,7 +32,7 @@ export default function ManageSheet({ onClose, onChange, onToast }) {
 
   const line = (p, action) => (
     <div key={p.id} className={s.row}>
-      <Avatar person={p} size={36} />
+      <Avatar person={p} size={40} />
       <span className={s.who}>
         <span className={s.name}>{p.name}</span>
         <span className={s.sub}>
@@ -55,7 +55,7 @@ export default function ManageSheet({ onClose, onChange, onToast }) {
   return (
     <Sheet open onClose={onClose} title="동기 관리">
       <label className={s.search}>
-        <Search size={18} strokeWidth={2.2} aria-hidden="true" />
+        <Search size={20} strokeWidth={2.2} aria-hidden="true" />
         <input
           type="search"
           value={query}

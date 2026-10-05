@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronRight } from 'lucide-react'
 import { APP_NAME, TABS } from '../../config.js'
-import { getPeople, getPoke, getQuizConfig, getQuizQuestions, isPoked, markPoked } from '../../store/dongi.js'
+import { getPeople, getPoke, getQuizConfig, getQuizQuestions } from '../../store/dongi.js'
 import Avatar from './Avatar.jsx'
 import ManageSheet from './ManageSheet.jsx'
 import GameSheet from './GameSheet.jsx'
@@ -20,11 +20,12 @@ const PUSH_MS = 3500
 // 접속 중인 동기는 얼굴 테두리가 얼굴 색으로 숨 쉬듯 빛나고 진도 바에 빛이 지나간다.
 // 동기들의 진도, 접속 여부, 상대의 답은 store/dongi.js의 가상 값이다(MY 공지사항에 밝힌다).
 // 찌르면 사진이 잠깐 떴다가 사라지고, 그 동기 휴대폰에 갈 알림의 예시를 위에 보여 준다(실제로 보내지는 않는다).
+// 찌르기는 횟수 제한이 없다. 시연할 때 같은 동기를 몇 번이고 다시 찌를 수 있다.
 export default function Dongi() {
   const [sheet, setSheet] = useState(null) // 'manage' | 'game' | { poke: 사람 }
   const [quiz, setQuiz] = useState(null) // { players, questions, run }
   const [flash, setFlash] = useState(null) // 사진을 띄우는 동안 찌른 동기 이름
-  const [push, setPush] = useState(null) // 알림 예시에 쓸 찌른 동기 이름
+  const [push, setPush] = useState(null) // 알림 예시. { id, name }(같은 동기를 또 찔러도 새 알림으로 다시 띄운다)
   const [toast, setToast] = useState(null) // { id, text }
   const [, refresh] = useReducer((n) => n + 1, 0)
   const seq = useRef(0) // 퀴즈 판, 안내 글을 구분하는 번호
@@ -41,7 +42,7 @@ export default function Dongi() {
     const id = setTimeout(() => {
       setFlash(null)
       setToast({ id: (seq.current += 1), text: `${name} 님을 푹 찔렀어요` })
-      setPush(name)
+      setPush({ id: (seq.current += 1), name })
     }, poke.imageMs)
     return () => clearTimeout(id)
   }, [flash, poke.imageMs])
@@ -72,8 +73,6 @@ export default function Dongi() {
   const again = () => setQuiz((q) => ({ ...q, questions: getQuizQuestions(config.rounds), run: (seq.current += 1) }))
 
   const doPoke = (p) => {
-    if (isPoked(p.id)) return
-    markPoked(p.id)
     setSheet(null)
     setFlash(p.name)
   }
@@ -124,7 +123,6 @@ export default function Dongi() {
         <PokeSheet
           person={sheet.poke}
           poke={poke}
-          done={isPoked(sheet.poke.id)}
           onPoke={() => doPoke(sheet.poke)}
           onClose={() => setSheet(null)}
         />
@@ -149,14 +147,14 @@ export default function Dongi() {
               </div>
             )}
             {push && (
-              <div className={s.push} role="status">
+              <div key={push.id} className={s.push} role="status">
                 <p className={s.pushHead}>
                   <img src={pwcLogo} alt="" />
                   {APP_NAME} · 지금
                 </p>
                 <p className={s.pushTitle}>동기가 푹 찔렀어요</p>
                 <p className={s.pushText}>{poke.message}</p>
-                <p className={s.pushNote}>{push} 님 휴대폰에 가는 알림 예시</p>
+                <p className={s.pushNote}>{push.name} 님 휴대폰에 가는 알림 예시</p>
               </div>
             )}
             {toast && (

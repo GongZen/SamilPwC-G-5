@@ -9,7 +9,6 @@
 // - getQuizConfig(): 스피드 퀴즈 설정(문제 수, 제한 시간, 정답 화면 시간, 함께할 동기 최대 수)
 // - getQuizQuestions(count): 스피드 퀴즈 문항. 삼일 끝내기 문항 중 짧은 것에서 무작위로 고른다
 // - getPoke(): 찌르기 문구와 사진을 보여 주는 시간
-// - isPoked(id), markPoked(id): 이번 접속 동안 찌른 동기(새로고침하면 다시 찌를 수 있다)
 //
 // 사람 한 명의 모양: { id, name, los, pct, online, me, color }
 // - color: 얼굴 색 순서(명단 안의 순서). 나는 -1
@@ -34,7 +33,6 @@ const TEAM = (Array.isArray(data.team) ? data.team : [])
   .map((p) => ({ id: text(p.id), name: text(p.name), los: text(p.los), pct: pct(p.pct) }))
   .filter((p) => p.id && p.name)
 const ONLINE = new Set(Array.isArray(data.online) ? data.online : [])
-const poked = new Set()
 
 // 동기 찾기에 나오는 가상 동기: 아수(습)라장 대기실 가상 참가자 이름. 진도는 이름 순서로 정한 고정 값
 function pool() {
@@ -133,12 +131,4 @@ export function getPoke() {
     button: text(p.button) || '푹 찌르기',
     imageMs: Number.isFinite(sec) && sec > 0 ? Math.round(sec * 1000) : 300,
   }
-}
-
-export function isPoked(id) {
-  return poked.has(id)
-}
-
-export function markPoked(id) {
-  poked.add(id)
 }
