@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FULLSCREEN_TABS, TAB_SURFACE, TABS } from './config.js'
 import { UserProvider, useUser } from './store/UserContext.jsx'
-import { isSamsungInternet, isStandalone } from './install.js'
+import { isStandalone, needsBrowserGuide } from './install.js'
 import { resumeExitGuard, useExitGuard, useTabHistory } from './components/backStack.js'
 import TabBar from './components/TabBar.jsx'
 import LoginSheet from './components/LoginSheet.jsx'
@@ -84,9 +84,9 @@ function Shell() {
 }
 
 export default function App() {
-  // 안드로이드 삼성 인터넷이면 앱 대신 안내를 먼저 보여 준다. '그래도 여기서 보기'를 누르면 이번 접속 동안 앱을 연다
-  const [guide, setGuide] = useState(isSamsungInternet)
-  if (guide) return <BrowserGuide onStay={() => setGuide(false)} />
+  // 안드로이드 삼성 인터넷이면 처음 한 번 PwC 마크 확인 화면을 먼저 보여 준다('잘 보여요'를 고르면 이 기기에서 기억)
+  const [guide, setGuide] = useState(needsBrowserGuide)
+  if (guide) return <BrowserGuide onStart={() => setGuide(false)} />
   return (
     <UserProvider>
       <Shell />

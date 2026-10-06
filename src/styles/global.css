@@ -12,7 +12,7 @@
 
 /* 다크 모드 조건문을 따르는 브라우저를 위해(예: 삼성 인터넷 실험실의 '웹사이트 다크 테마 사용'을 켠 경우)
    다크 모드 조건에서도 같은 밝은 색을 쓰라고 한 번 더 적어 둔다(색은 바꾸지 않는다).
-   삼성 인터넷 기본 설정은 이것도 따르지 않아 BrowserGuide가 Google 앱·크롬으로 안내한다 */
+   삼성 인터넷 기본 설정은 이것도 따르지 않아 BrowserGuide가 PwC 마크로 확인하게 하고 크롬으로 안내한다 */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: only light;

@@ -1,4 +1,4 @@
-/* 삼성 인터넷 안내 화면. 앱 틀(App.module.css의 .app)과 같은 폭으로 가운데에 둔다 */
+/* 삼성 인터넷 확인 화면. 앱 틀(App.module.css의 .app)과 같은 폭으로 가운데에 둔다 */
 .wrap {
   display: flex;
   flex-direction: column;
@@ -29,13 +29,29 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 28px 20px 16px;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
 }
 
 .title {
   font-size: 24px;
   font-weight: 800;
   line-height: 1.35;
+}
+
+/* 확인용 카드: 흰 바탕에 PwC 마크. 삼성 인터넷이 다크 모드를 입히면 카드가 어두워져 검은 글자가 거의 사라진다 */
+.sample {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 112px;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--w);
+}
+
+.sampleLogo {
+  width: auto;
+  height: 44px;
 }
 
 .text {
@@ -59,7 +75,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 /* 링크를 입체 버튼 모양으로(Button3D.module.css의 모양을 함께 쓴다) */
@@ -67,11 +83,13 @@
   text-decoration: none;
 }
 
+/* '위 크롬으로 열기가 되지 않는다면...' 주소 상자 위의 안내 */
 .hint {
-  margin-top: -4px;
+  margin-top: 8px;
   font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
   color: var(--k3);
-  text-align: center;
 }
 
 .copyBox {
@@ -79,6 +97,7 @@
   align-items: center;
   gap: 8px;
   min-height: 52px;
+  margin-top: -8px;
   padding: 0 6px 0 14px;
   border: 1.5px solid var(--line);
   border-radius: 12px;
@@ -109,6 +128,7 @@
 }
 
 .status {
+  margin-top: -8px;
   font-size: 13px;
   font-weight: 600;
   line-height: 1.5;
@@ -117,30 +137,4 @@
 
 .statusFail {
   color: var(--k2);
-}
-
-.foot {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 20px calc(20px + env(safe-area-inset-bottom));
-}
-
-.stay {
-  min-height: 44px;
-  padding: 0 12px;
-  border: 0;
-  background: none;
-  color: var(--k3);
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.stayHint {
-  font-size: 12px;
-  color: var(--k4);
 }

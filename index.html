@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#FFFFFF" />
     <!-- 늘 밝은 화면. 크롬의 자동 다크 모드는 'only light'를 따른다. 안드로이드 삼성 인터넷은 기본 설정에서 이 값을 따르지 않고
-         휴대폰이 다크 모드면 색을 강제로 바꾼다. 그래서 삼성 인터넷으로 열면 앱 대신 Google 앱·크롬 안내를 먼저 보여 준다(BrowserGuide) -->
+         휴대폰이 다크 모드면 색을 강제로 바꾼다. 그래서 삼성 인터넷으로 처음 열면 PwC 마크로 확인하게 하고 크롬으로 안내한다(BrowserGuide) -->
     <meta name="color-scheme" content="only light" />
     <!-- 번역 제안을 띄우지 않는다 -->
     <meta name="google" content="notranslate" />
     <title>삼일 끝내기</title>
 
     <!-- 홈 화면에 추가하면 주소창 없이 앱처럼 열린다(public/manifest.webmanifest).
-         안드로이드 삼성 인터넷에는 설치 정보를 주지 않아 삼성 인터넷으로는 설치되지 않게 한다(색이 바뀌는 앱이 되므로) -->
+         안드로이드 삼성 인터넷은 'PwC 마크가 잘 보여요'를 고른 기기에만 설치 정보를 준다(다크 모드인 사람이 색이 바뀌는 앱을 설치하지 않게).
+         고르는 순간에는 src/install.js의 confirmSamsungLight가 붙인다 -->
     <script>
       ;(function () {
         var ua = navigator.userAgent || ''
-        if (/SamsungBrowser/i.test(ua) && /Android/i.test(ua)) return
+        if (/SamsungBrowser/i.test(ua) && /Android/i.test(ua)) {
+          var ok = false
+          try {
+            ok = localStorage.getItem('samil-kkeutnaegi:samsung.lightOk') === 'true'
+          } catch (e) {}
+          if (!ok) return
+        }
         var link = document.createElement('link')
         link.rel = 'manifest'
         link.href = '/manifest.webmanifest'
@@ -42,6 +49,33 @@
           sessionStorage.setItem('samil-kkeutnaegi:kakao.escaped', '1')
         } catch (e) {}
         location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href)
+      })()
+    </script>
+    <script>
+      // 확인용 숨김 기능: 주소 끝에 ?check를 붙이면 이 브라우저가 다크 모드 신호를 페이지에 주는지 화면 아래에 작게 보여 준다.
+      // 삼성 인터넷이 신호를 준다면 다크 모드가 아닌 사람은 확인 화면 없이 바로 앱으로 보낼 수 있다
+      ;(function () {
+        if (!/[?&]check(?:[=&]|$)/.test(location.search)) return
+        var show = function () {
+          var mm = function (q) {
+            return Boolean(window.matchMedia && window.matchMedia(q).matches)
+          }
+          var ua = navigator.userAgent || ''
+          var box = document.createElement('div')
+          box.setAttribute('role', 'status')
+          box.style.cssText =
+            'position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;padding:10px 12px;border-radius:10px;background:#1F1A17;color:#FFFFFF;font:600 13px/1.5 sans-serif;text-align:center'
+          box.textContent =
+            '확인용: 다크 모드 신호 ' +
+            (mm('(prefers-color-scheme: dark)') ? '받음' : '못 받음') +
+            ' · 삼성 인터넷 ' +
+            (/SamsungBrowser/i.test(ua) ? '예' : '아니요') +
+            ' · 설치한 앱 ' +
+            (mm('(display-mode: standalone)') ? '예' : '아니요')
+          document.body.appendChild(box)
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show)
+        else show()
       })()
     </script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
