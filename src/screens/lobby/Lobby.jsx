@@ -93,13 +93,7 @@ export default function Lobby({ entry }) {
   const mocks = getMockExams()
   const mockDone = mocks.filter((m) => m.done).length
   const settings = getSettings()
-  const mascotLines = lobbyLines({
-    subject,
-    units,
-    streak: progress.streak,
-    exam,
-    wrongCount: wrongNotes.length,
-  })
+  const mascotLines = lobbyLines({ subject, units })
 
   const showToast = (text) => setToast((t) => ({ id: (t ? t.id : 0) + 1, text }))
 

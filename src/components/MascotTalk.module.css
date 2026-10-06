@@ -161,3 +161,27 @@
     scale: 1;
   }
 }
+
+/* 글자 위에 그림을 얹은 칸(마마쉘의 시험 우수자 대사). 줄 안에서 한 덩어리로 움직인다 */
+.tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  margin: 4px 1px 0;
+  vertical-align: bottom;
+}
+
+/* 그림을 칸 왼쪽에서 정한 만큼 띄운 자리에 둔다(여러 그림을 한 세로선에 맞출 때, MascotTalk.jsx의 imageLeft) */
+.tagAt {
+  align-items: flex-start;
+}
+
+.tagImg {
+  width: 30px;
+  height: 30px;
+}
+
+.tagText {
+  color: var(--o-dk);
+}
