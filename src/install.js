@@ -8,6 +8,7 @@
 //   잘 안 보이면 크롬으로 안내하고, 잘 보인다고 고른 기기에만 설치 정보를 붙여 삼성 인터넷에서도 설치할 수 있게 한다
 // 배너를 닫으면 이 탭에서는 다시 보이지 않는다(sessionStorage).
 
+import { SAMSUNG_GUIDE_EVERY_VISIT } from './config.js'
 import { read, write } from './store/storage.js'
 
 const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
@@ -79,12 +80,14 @@ export function isCheckMode() {
   return typeof window !== 'undefined' && /[?&]check(?:[=&]|$)/.test(window.location.search)
 }
 
-/** 앱 대신 BrowserGuide를 먼저 보여 줄지: 삼성 인터넷이면서 아직 '잘 보여요'를 고르지 않았을 때(또는 ?check) */
+/** 앱 대신 BrowserGuide를 먼저 보여 줄지: 삼성 인터넷이면서 접속할 때마다 보여 주는 설정이거나(config.js),
+ * 아직 '잘 보여요'를 고르지 않았을 때(또는 ?check) */
 export function needsBrowserGuide() {
-  return isSamsungInternet() && (!isSamsungLightOk() || isCheckMode())
+  return isSamsungInternet() && (SAMSUNG_GUIDE_EVERY_VISIT || !isSamsungLightOk() || isCheckMode())
 }
 
-/** '잘 보여요! 바로 시작하죠!': 이 기기에서 기억하고, 설치 정보를 붙여 삼성 인터넷에서도 설치할 수 있게 한다 */
+/** '잘 보여요! 바로 시작하죠!': 이 기기에서 기억하고(다음부터 처음부터 설치 정보를 붙인다), 지금 설치 정보를 붙여
+ * 삼성 인터넷에서도 설치할 수 있게 한다 */
 export function confirmSamsungLight() {
   write(LIGHT_KEY, true)
   if (document.querySelector('link[rel="manifest"]')) return

@@ -60,3 +60,8 @@ export const EXAMS = {
   1: { name: '기본실무과정 종합평가', short: '1년차 기본실무', daysFromToday: 1 },
   2: { name: '외부감사실무과정 종합평가', short: '2년차 외부감사실무', daysFromToday: 366 },
 }
+
+// 안드로이드 삼성 인터넷의 PwC 마크 확인 화면(components/BrowserGuide.jsx)을 접속할 때마다 보여 줄지.
+// true: 접속할 때마다 보여 준다(시험용, 10/06). false: '잘 보여요'를 고르면 이 기기에서 기억해 다음부터 바로 앱을 연다.
+// 어느 쪽이든 '잘 보여요'를 고른 기기에는 처음부터 설치 정보를 붙여 삼성 인터넷에서도 설치할 수 있다.
+export const SAMSUNG_GUIDE_EVERY_VISIT = true

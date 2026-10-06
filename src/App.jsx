@@ -84,7 +84,7 @@ function Shell() {
 }
 
 export default function App() {
-  // 안드로이드 삼성 인터넷이면 처음 한 번 PwC 마크 확인 화면을 먼저 보여 준다('잘 보여요'를 고르면 이 기기에서 기억)
+  // 안드로이드 삼성 인터넷이면 PwC 마크 확인 화면을 먼저 보여 준다(접속할 때마다 또는 처음 한 번, config.js의 SAMSUNG_GUIDE_EVERY_VISIT)
   const [guide, setGuide] = useState(needsBrowserGuide)
   if (guide) return <BrowserGuide onStart={() => setGuide(false)} />
   return (
