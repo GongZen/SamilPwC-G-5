@@ -4,6 +4,8 @@
 // - 아이폰: 웹에서 설치 창을 열 수 없어 '공유 > 홈 화면에 추가' 방법을 보여 준다
 // - 카카오톡 안 브라우저: 설치할 수 없다. index.html이 기본 브라우저로 넘기고, 넘어가지 않으면 직접 여는 방법을 보여 준다
 // - 이미 설치한 앱(전체 화면)으로 열었거나 PC(마우스)면 아무것도 보여 주지 않는다
+// - 안드로이드 삼성 인터넷: 설치 안내를 보이지 않는다. 휴대폰이 다크 모드면 앱 색을 강제로 바꾸므로
+//   앱 대신 BrowserGuide가 Google 앱이나 크롬으로 열어 설치하라고 안내한다(index.html도 설치 정보를 주지 않는다)
 // 배너를 닫으면 이 탭에서는 다시 보이지 않는다(sessionStorage).
 
 const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
@@ -54,9 +56,32 @@ export function isStandalone() {
   return matches('(display-mode: standalone)') || matches('(display-mode: fullscreen)') || navigator.standalone === true
 }
 
+/** 안드로이드 삼성 인터넷으로 열었는지. 삼성 인터넷은 기본 설정에서 휴대폰이 다크 모드면 앱 색을 강제로 바꾸고
+ * 이 앱의 color-scheme 설정(늘 밝은 화면)을 따르지 않는다. 크롬과 Google 앱은 따른다 */
+export function isSamsungInternet() {
+  return /SamsungBrowser/i.test(ua) && /Android/i.test(ua)
+}
+
+const CHROME_STORE = 'https://play.google.com/store/apps/details?id=com.android.chrome'
+
+/** 지금 주소를 크롬으로 여는 안드로이드 intent 주소. 크롬이 없거나 꺼져 있으면 Play 스토어의 크롬 페이지로 간다 */
+export function chromeIntentUrl(href = window.location.href) {
+  const u = new URL(href)
+  const fallback = encodeURIComponent(CHROME_STORE)
+  return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${fallback};end`
+}
+
+/** Google 앱에서 이 앱 주소를 검색하는 안드로이드 intent 주소(검색 결과에서 주소를 눌러 연다).
+ * Google 앱에 주소를 바로 여는 공식 방법은 없다. Google 앱이 없으면 웹의 Google 검색으로 간다 */
+export function googleIntentUrl(href = window.location.href) {
+  const q = encodeURIComponent(new URL(href).host)
+  const fallback = encodeURIComponent(`https://www.google.com/search?q=${q}`)
+  return `intent://www.google.com/search?q=${q}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;S.browser_fallback_url=${fallback};end`
+}
+
 /** 지금 보여 줄 설치 안내: 'install'(설치 버튼) | 'ios'(아이폰 방법 안내) | 'kakao'(카카오톡 밖으로 열기 안내) | null */
 export function getInstallMode() {
-  if (installed || dismissed || isStandalone()) return null
+  if (installed || dismissed || isStandalone() || isSamsungInternet()) return null
   if (isKakaoInApp()) return 'kakao'
   if (!matches('(pointer: coarse)')) return null
   if (deferred) return 'install'

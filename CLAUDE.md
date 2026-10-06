@@ -99,7 +99,7 @@ src/
 ├─ styles/tokens.css, global.css    색 변수, 기본값 (빌드 리드)
 ├─ components/                      공통 부품 (빌드 리드)
 │   TabBar, UsersThreeIcon(동기들 탭 아이콘), Button3D, Card, Sheet, LoginSheet, Mascot, MascotTalk(누르면 말풍선), InstallBanner(앱 설치 안내),
-│   backStack(휴대폰 뒤로 가기), ExitConfirm(종료 확인 창, 문제 풀이 '그만할까요?' 창)
+│   backStack(휴대폰 뒤로 가기), ExitConfirm(종료 확인 창, 문제 풀이 '그만할까요?' 창), BrowserGuide(삼성 인터넷 안내)
 ├─ store/                           데이터 창구. 화면은 여기 함수만 부른다
 │   storage.js(빌드 리드), user.js와 UserContext.jsx(간편 로그인, 설정, D-day)
 │   lobby.js, samchocut.js, asurajang.js(기능 담당자), dongi.js(빌드 리드)
@@ -123,6 +123,7 @@ src/
 - 시간에 묶인 잠금은 핵심 체험을 막지 않는다. 모의고사는 오픈 시각, 알림 없이 회차를 누르면 언제든 바로 응시한다(마지막 점수 저장). 단계 학습과 퀴즈도 언제 열어도 해 볼 수 있다
 - 알림 토글은 설정만 저장한다(`setSetting`). 실제 알림은 보내지 않는다
 - 앱 설치: 카카오톡 안 브라우저로 열면 `index.html`의 스크립트가 기본 브라우저로 넘긴다(`kakaotalk://web/openExternal`, 카카오 공식 문서에 없는 방식). 설치 안내 배너는 `src/install.js`가 조건을 정한다(안드로이드는 브라우저가 허락하면 설치 버튼, 아이폰은 홈 화면에 추가 방법). 설치 창에 보이는 설명과 화면 사진은 `public/manifest.webmanifest`와 `public/screenshots/`
+- 안드로이드 삼성 인터넷은 기본 설정에서 휴대폰이 다크 모드면 앱 색을 강제로 바꾸고 `color-scheme` 설정을 따르지 않는다(크롬과 Google 앱은 따른다). 그래서 삼성 인터넷으로 열면 앱 대신 `BrowserGuide`(Google 앱으로 열기, 크롬으로 열기, 주소 복사, '그래도 여기서 보기')를 먼저 보여 주고, 삼성 인터넷에는 설치 정보(manifest)를 주지 않는다(`index.html`). 판별과 여는 주소는 `src/install.js`
 - 버튼과 입력란은 실제 `<button>`, `<input>`을 쓰고, 누르는 영역은 44px 이상으로 한다
 
 ## 9. 실행과 확인

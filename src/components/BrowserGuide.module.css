@@ -1,0 +1,146 @@
+/* 삼성 인터넷 안내 화면. 앱 틀(App.module.css의 .app)과 같은 폭으로 가운데에 둔다 */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding-top: env(safe-area-inset-top);
+  background: var(--w);
+}
+
+.brand {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 20px;
+}
+
+.logo {
+  width: auto;
+  height: 16px;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px 20px 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--k2);
+}
+
+/* 삼성 인터넷으로 이미 설치한 앱일 때 */
+.note {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--o-tint);
+  color: var(--o-dk);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* 링크를 입체 버튼 모양으로(Button3D.module.css의 모양을 함께 쓴다) */
+.link {
+  text-decoration: none;
+}
+
+.hint {
+  margin-top: -4px;
+  font-size: 13px;
+  color: var(--k3);
+  text-align: center;
+}
+
+.copyBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 6px 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--k2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: all;
+}
+
+.copy {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--o);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.status {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ok);
+}
+
+.statusFail {
+  color: var(--k2);
+}
+
+.foot {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 20px calc(20px + env(safe-area-inset-bottom));
+}
+
+.stay {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--k3);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stayHint {
+  font-size: 12px;
+  color: var(--k4);
+}

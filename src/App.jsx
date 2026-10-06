@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { FULLSCREEN_TABS, TAB_SURFACE, TABS } from './config.js'
 import { UserProvider, useUser } from './store/UserContext.jsx'
-import { isStandalone } from './install.js'
+import { isSamsungInternet, isStandalone } from './install.js'
 import { resumeExitGuard, useExitGuard, useTabHistory } from './components/backStack.js'
 import TabBar from './components/TabBar.jsx'
 import LoginSheet from './components/LoginSheet.jsx'
 import InstallBanner from './components/InstallBanner.jsx'
 import ExitConfirm from './components/ExitConfirm.jsx'
+import BrowserGuide from './components/BrowserGuide.jsx'
 import Lobby from './screens/lobby/Lobby.jsx'
 import Samchocut from './screens/samchocut/Samchocut.jsx'
 import Asurajang from './screens/asurajang/Asurajang.jsx'
@@ -83,6 +84,9 @@ function Shell() {
 }
 
 export default function App() {
+  // 안드로이드 삼성 인터넷이면 앱 대신 안내를 먼저 보여 준다. '그래도 여기서 보기'를 누르면 이번 접속 동안 앱을 연다
+  const [guide, setGuide] = useState(isSamsungInternet)
+  if (guide) return <BrowserGuide onStay={() => setGuide(false)} />
   return (
     <UserProvider>
       <Shell />
