@@ -1,0 +1,45 @@
+/* 나가기 확인 창(앱 종료, 문제 풀이 그만두기). 아수(습)라장의 '지금 나갈까요?' 창과 같은 모양 */
+
+/* 종료 확인의 덧붙임 한 줄(오늘 할 일 수 또는 시험 D-day) */
+.line {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--o-dk);
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--k2);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* '한 번 더 뒤로 가면 앱이 닫혀요' */
+.hint {
+  padding: 6px 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--k3);
+  text-align: center;
+}
+
+/* '그만하기': 입체 버튼이 아닌 글자 버튼 */
+.quit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--k2);
+  font-size: 15px;
+  font-weight: 700;
+}

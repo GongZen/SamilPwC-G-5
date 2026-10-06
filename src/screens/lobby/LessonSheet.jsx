@@ -3,6 +3,7 @@ import { Star, X } from 'lucide-react'
 import { TABS } from '../../config.js'
 import Sheet from '../../components/Sheet.jsx'
 import Button3D from '../../components/Button3D.jsx'
+import { QuitConfirm } from '../../components/ExitConfirm.jsx'
 import { addWrongNote, saveLessonResult, saveMockResult } from '../../store/lobby.js'
 import s from './LessonSheet.module.css'
 
@@ -26,12 +27,15 @@ const BACK_LABEL = LOBBY ? `${withRo(LOBBY)} 돌아가기` : '돌아가기'
 // lesson은 store의 getLesson() 또는 getMockLesson() 결과다. 열 때마다 새로 그린다(Lobby에서 key로 구분).
 // 모의고사(kind 'mock')는 문항마다 과목이 다르고, 진도와 연속 학습일 대신 회차 점수를 저장한다.
 // backLabel: 완료 화면 버튼 글자(다른 탭에서 열었을 때 바꾼다. 기본은 '삼일 끝내기로 돌아가기')
+// 한 문제 이상 '확인'한 뒤 결과가 나오기 전에 나가려 하면(X 버튼, 휴대폰 뒤로 가기, Esc) '그만할까요?'를 먼저 묻는다.
+// 그만두면 진도(모의고사는 점수)는 저장하지 않고, 이미 틀린 문제는 확인할 때 오답노트에 저장했으므로 남는다.
 export default function LessonSheet({ lesson, onClose, onChange, backLabel }) {
   const [qi, setQi] = useState(0)
   const [picked, setPicked] = useState(null)
   const [checked, setChecked] = useState(false)
   const [correct, setCorrect] = useState(0)
   const [result, setResult] = useState(null)
+  const [askQuit, setAskQuit] = useState(false)
   const bodyRef = useRef(null)
 
   const total = lesson.questions.length
@@ -41,6 +45,14 @@ export default function LessonSheet({ lesson, onClose, onChange, backLabel }) {
   const isRight = checked && picked === item.a
   const isLast = qi + 1 >= total
   const pct = result ? 100 : Math.round(((qi + (checked ? 1 : 0)) / total) * 100)
+  const needsAsk = !result && (qi > 0 || checked)
+  const askOpen = askQuit && needsAsk
+
+  // 나가기(X 버튼, 휴대폰 뒤로 가기, Esc). 푼 문제가 있으면 먼저 묻는다
+  const requestClose = () => {
+    if (needsAsk) setAskQuit(true)
+    else onClose()
+  }
 
   // 새 문제는 맨 위부터, 채점하면 해설과 다음 버튼이 보이게 아래로
   useEffect(() => {
@@ -86,97 +98,109 @@ export default function LessonSheet({ lesson, onClose, onChange, backLabel }) {
   }
 
   return (
-    <Sheet open onClose={onClose} showClose={false} closeOnDim={false} ariaLabel={`${lesson.nodeLabel} 학습`}>
-      <div className={s.head}>
-        <button type="button" className={s.close} onClick={onClose} aria-label="학습 닫기">
-          <X size={22} strokeWidth={2.2} aria-hidden="true" />
-        </button>
-        <div
-          className={s.bar}
-          role="progressbar"
-          aria-label="학습 진행"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={pct}
-        >
-          <div className={s.fill} style={{ width: `${pct}%` }} />
-        </div>
-        <span className={s.count}>
-          {Math.min(qi + 1, total)}/{total}
-        </span>
-      </div>
-
-      {result ? (
-        <div className={s.done}>
-          <div className={s.doneBadge}>
-            <Star size={40} strokeWidth={1.5} className={s.doneStar} aria-hidden="true" />
+    <>
+      <Sheet open onClose={requestClose} showClose={false} closeOnDim={false} ariaLabel={`${lesson.nodeLabel} 학습`}>
+        <div className={s.head}>
+          <button type="button" className={s.close} onClick={requestClose} aria-label="학습 닫기">
+            <X size={22} strokeWidth={2.2} aria-hidden="true" />
+          </button>
+          <div
+            className={s.bar}
+            role="progressbar"
+            aria-label="학습 진행"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={pct}
+          >
+            <div className={s.fill} style={{ width: `${pct}%` }} />
           </div>
-          <h2 className={s.doneTitle}>
-            {lesson.nodeLabel} {lesson.review ? '복습 완료!' : '완료!'}
-          </h2>
-          <p className={s.doneText}>
-            {total}문제 중 <b>{correct}문제</b> 정답
-            {correct < total && ' · 틀린 문제는 오답노트에 저장했어요'}
-          </p>
-          {result.streak !== null && <p className={s.doneStreak}>연속 학습 {result.streak}일째</p>}
-          {isMock && Number.isFinite(result.score) && <p className={s.doneNote}>점수 {result.score}점</p>}
-          <Button3D className={s.doneBtn} onClick={onClose}>
-            {backLabel || BACK_LABEL}
-          </Button3D>
+          <span className={s.count}>
+            {Math.min(qi + 1, total)}/{total}
+          </span>
         </div>
-      ) : (
-        <>
-          <div ref={bodyRef} className={s.body}>
-            <div className={s.chips}>
-              <span className={s.chipSubject}>{itemSubject}</span>
-              <span className={s.chipNode}>{lesson.nodeLabel}</span>
-              {lesson.review && <span className={s.chipNode}>복습</span>}
+
+        {result ? (
+          <div className={s.done}>
+            <div className={s.doneBadge}>
+              <Star size={40} strokeWidth={1.5} className={s.doneStar} aria-hidden="true" />
             </div>
-
-            <p className={s.question}>{item.q}</p>
-
-            <div className={s.options}>
-              {item.o.map((text, i) => {
-                let tone = ''
-                if (!checked && picked === i) tone = s.optPicked
-                if (checked && i === item.a) tone = s.optRight
-                if (checked && picked === i && i !== item.a) tone = s.optWrong
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    className={tone ? `${s.option} ${tone}` : s.option}
-                    onClick={() => setPicked(i)}
-                    disabled={checked}
-                    aria-pressed={picked === i}
-                  >
-                    <span className={s.no}>{i + 1}</span>
-                    <span className={s.optionText}>{text}</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            {checked && (
-              <div className={isRight ? `${s.feedback} ${s.feedbackRight}` : `${s.feedback} ${s.feedbackWrong}`} role="status">
-                <p className={s.feedbackTitle}>{isRight ? '정답이에요!' : '아쉬워요 · 오답노트에 저장했어요'}</p>
-                <p className={s.feedbackText}>{item.ex}</p>
-                {item.source && <p className={s.source}>출처 · {item.source}</p>}
+            <h2 className={s.doneTitle}>
+              {lesson.nodeLabel} {lesson.review ? '복습 완료!' : '완료!'}
+            </h2>
+            <p className={s.doneText}>
+              {total}문제 중 <b>{correct}문제</b> 정답
+              {correct < total && ' · 틀린 문제는 오답노트에 저장했어요'}
+            </p>
+            {result.streak !== null && <p className={s.doneStreak}>연속 학습 {result.streak}일째</p>}
+            {isMock && Number.isFinite(result.score) && <p className={s.doneNote}>점수 {result.score}점</p>}
+            <Button3D className={s.doneBtn} onClick={onClose}>
+              {backLabel || BACK_LABEL}
+            </Button3D>
+          </div>
+        ) : (
+          <>
+            <div ref={bodyRef} className={s.body}>
+              <div className={s.chips}>
+                <span className={s.chipSubject}>{itemSubject}</span>
+                <span className={s.chipNode}>{lesson.nodeLabel}</span>
+                {lesson.review && <span className={s.chipNode}>복습</span>}
               </div>
-            )}
-          </div>
 
-          <div className={s.foot}>
-            {checked ? (
-              <Button3D onClick={next}>{isLast ? '결과 보기' : '다음 문제'}</Button3D>
-            ) : (
-              <Button3D onClick={check} disabled={picked === null}>
-                확인
-              </Button3D>
-            )}
-          </div>
-        </>
-      )}
-    </Sheet>
+              <p className={s.question}>{item.q}</p>
+
+              <div className={s.options}>
+                {item.o.map((text, i) => {
+                  let tone = ''
+                  if (!checked && picked === i) tone = s.optPicked
+                  if (checked && i === item.a) tone = s.optRight
+                  if (checked && picked === i && i !== item.a) tone = s.optWrong
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      className={tone ? `${s.option} ${tone}` : s.option}
+                      onClick={() => setPicked(i)}
+                      disabled={checked}
+                      aria-pressed={picked === i}
+                    >
+                      <span className={s.no}>{i + 1}</span>
+                      <span className={s.optionText}>{text}</span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              {checked && (
+                <div className={isRight ? `${s.feedback} ${s.feedbackRight}` : `${s.feedback} ${s.feedbackWrong}`} role="status">
+                  <p className={s.feedbackTitle}>{isRight ? '정답이에요!' : '아쉬워요 · 오답노트에 저장했어요'}</p>
+                  <p className={s.feedbackText}>{item.ex}</p>
+                  {item.source && <p className={s.source}>출처 · {item.source}</p>}
+                </div>
+              )}
+            </div>
+
+            <div className={s.foot}>
+              {checked ? (
+                <Button3D onClick={next}>{isLast ? '결과 보기' : '다음 문제'}</Button3D>
+              ) : (
+                <Button3D onClick={check} disabled={picked === null}>
+                  확인
+                </Button3D>
+              )}
+            </div>
+          </>
+        )}
+      </Sheet>
+      <QuitConfirm
+        open={askOpen}
+        text={
+          isMock
+            ? '지금 그만두면 이 회차 점수는 저장되지 않아요. 이미 틀린 문제는 오답노트에 남아요.'
+            : '지금 그만두면 이 단계 진도는 저장되지 않아요. 이미 틀린 문제는 오답노트에 남아요.'
+        }
+        onStay={() => setAskQuit(false)}
+        onQuit={onClose}
+      />
+    </>
   )
 }

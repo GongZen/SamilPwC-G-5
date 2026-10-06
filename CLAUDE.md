@@ -98,7 +98,8 @@ src/
 ├─ main.jsx, App.jsx, config.js     시작점, 앱 틀(탭 이동, 로고, 시트 층), 표시 이름과 과목 구성 (빌드 리드)
 ├─ styles/tokens.css, global.css    색 변수, 기본값 (빌드 리드)
 ├─ components/                      공통 부품 (빌드 리드)
-│   TabBar, UsersThreeIcon(동기들 탭 아이콘), Button3D, Card, Sheet, LoginSheet, Mascot, MascotTalk(누르면 말풍선), InstallBanner(앱 설치 안내)
+│   TabBar, UsersThreeIcon(동기들 탭 아이콘), Button3D, Card, Sheet, LoginSheet, Mascot, MascotTalk(누르면 말풍선), InstallBanner(앱 설치 안내),
+│   backStack(휴대폰 뒤로 가기), ExitConfirm(종료 확인 창, 문제 풀이 '그만할까요?' 창)
 ├─ store/                           데이터 창구. 화면은 여기 함수만 부른다
 │   storage.js(빌드 리드), user.js와 UserContext.jsx(간편 로그인, 설정, D-day)
 │   lobby.js, samchocut.js, asurajang.js(기능 담당자), dongi.js(빌드 리드)
@@ -114,6 +115,8 @@ src/
 
 - 화면 맨 바깥 요소는 `flex: 1; min-height: 0; display: flex; flex-direction: column`으로 두고, 스크롤은 화면 안의 영역에서 한다
 - 아래에서 올라오는 창은 `<Sheet>`를 쓴다. 하단 탭까지 덮고, 열리면 초점이 시트 안으로 들어간다. 제목을 직접 그리면 `ariaLabel`로 시트 이름을 준다
+- 휴대폰 뒤로 가기는 앱 안의 이전 단계로 간다(`src/components/backStack.js`). `<Sheet>`는 열려 있는 동안 뒤로 가기로 닫힌다(Esc, 닫기 버튼과 같은 `onClose`). 시트가 아닌 겹침 화면(메뉴 등)은 `useBackLayer(열림, 닫기)`를, 전체 화면 탭은 `useScreenBack(나가기)`를 쓴다. 탭은 지나온 순서대로 되돌아가고, 홈 화면에 설치한 앱에서는 첫 화면의 뒤로 가기를 한 번 붙잡아 종료 확인 창을 띄운다(한 번 더 누르면 닫힌다)
+- 문제 풀이 화면(학습, 모의고사, 스피드 퀴즈)은 한 문제 이상 푼 뒤 결과 전에 나가려 하면(X 버튼, 뒤로 가기) `QuitConfirm`으로 '그만할까요?'를 먼저 묻는다
 - 로그인이 필요한 동작은 `useUser().requireLogin(다음에 할 일)`로 감싼다. 로그인이 안 돼 있으면 간편 로그인 창이 먼저 뜬다
 - 다른 탭으로 이동은 화면이 받는 `goTo('탭 id')`, 전체 화면 탭에서 나가기는 `goBack()`을 쓴다. 그 탭의 시트나 글을 바로 열려면 `goTo('lobby', { sheet: 'wrong' })`처럼 두 번째 값을 주고, 받는 화면은 `entry`로 읽는다(지금 쓰는 값: lobby의 sheet, samchocut의 post)
 - 타이머는 시작 시각을 기준으로 남은 시간을 계산하고, 화면이 사라질 때 반드시 정리한다(`clearInterval`)

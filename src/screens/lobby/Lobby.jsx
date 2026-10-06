@@ -19,6 +19,7 @@ import {
 } from '../../store/lobby.js'
 import { getExam, getSettings, setSetting } from '../../store/user.js'
 import { SUBJECT_GROUPS } from '../../config.js'
+import { useBackLayer } from '../../components/backStack.js'
 import { lobbyLines } from './mascotLines.js'
 import LearningPath from './LearningPath.jsx'
 import LessonSheet from './LessonSheet.jsx'
@@ -49,6 +50,9 @@ export default function Lobby({ entry }) {
   const subjectBtnRef = useRef(null)
   const [, setVersion] = useState(0)
   const refresh = () => setVersion((v) => v + 1)
+
+  // 과목 메뉴는 휴대폰 뒤로 가기로도 닫힌다
+  useBackLayer(menuOpen, () => setMenuOpen(false))
 
   // 과목 메뉴는 Esc로도 닫는다. 닫으면 과목 버튼으로 초점을 돌려준다
   useEffect(() => {

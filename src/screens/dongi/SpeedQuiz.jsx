@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Crown, X } from 'lucide-react'
 import Sheet from '../../components/Sheet.jsx'
 import Button3D from '../../components/Button3D.jsx'
+import { QuitConfirm } from '../../components/ExitConfirm.jsx'
 import Avatar from './Avatar.jsx'
 import { botAnswer, points, rankPlayers } from './speed.js'
 import s from './SpeedQuiz.module.css'
@@ -9,6 +10,8 @@ import s from './SpeedQuiz.module.css'
 // 스피드 퀴즈(전체 화면). 아수(습)라장처럼 제한 시간이 다 지나야 정답을 공개하고,
 // 정답 화면은 숫자로 세다가 revealSeconds 뒤 자동으로 다음 문제(마지막이면 결과)로 넘어간다.
 // 한 번 고른 보기는 바꿀 수 없고, 속도 점수는 고른 순간까지 걸린 시간으로 계산한다. 상대의 답은 가상이다.
+// 보기를 한 번이라도 고른 뒤 결과 전에 나가려 하면(X 버튼, 휴대폰 뒤로 가기, Esc) '그만할까요?'를 먼저 묻는다.
+// 묻는 동안에도 시간은 흐르고, 그사이 결과 화면이 되면 묻는 창은 저절로 닫힌다.
 // players: 나(첫 번째)와 함께할 동기, questions: 문항 묶음(store가 고름), config: getQuizConfig()
 export default function SpeedQuiz({ players, questions, config, onExit, onAgain }) {
   const { seconds, revealSeconds } = config
@@ -19,11 +22,21 @@ export default function SpeedQuiz({ players, questions, config, onExit, onAgain 
   const [answered, setAnswered] = useState([]) // 이번 문제에서 이미 고른 사람 id(맞았는지는 공개 전까지 모른다)
   const [answers, setAnswers] = useState(null) // 공개된 이번 문제 결과. { id: { pick, t, correct, pts } }
   const [count, setCount] = useState(revealSeconds)
+  const [played, setPlayed] = useState(false) // 보기를 한 번이라도 골랐는지
+  const [askQuit, setAskQuit] = useState(false)
   const [totals, setTotals] = useState(() => Object.fromEntries(players.map((p) => [p.id, { pts: 0, ok: 0, time: 0 }])))
   const started = useRef(0)
   const mineRef = useRef(null)
   const q = questions[i]
   const last = i === total - 1
+  const needsAsk = phase !== 'result' && played
+  const askOpen = askQuit && needsAsk
+
+  // 나가기(X 버튼, 휴대폰 뒤로 가기, Esc). 보기를 고른 적이 있으면 먼저 묻는다
+  const requestExit = () => {
+    if (needsAsk) setAskQuit(true)
+    else onExit()
+  }
 
   // 문제가 열리면 가상 동기의 답을 정하고, 각자 고른 순간 '골랐음' 표시를 붙인다. 제한 시간이 끝나면 정답 공개
   useEffect(() => {
@@ -84,114 +97,123 @@ export default function SpeedQuiz({ players, questions, config, onExit, onAgain 
     const t = Math.min(seconds, Math.max(0, Math.round(((at - started.current) / 1000) * 10) / 10))
     mineRef.current = { pick: k, t, correct: k === q.a }
     setMine(k)
+    setPlayed(true)
     setAnswered((list) => [...list, 'me'])
   }
 
   return (
-    <Sheet open onClose={onExit} showClose={false} closeOnDim={false} ariaLabel="스피드 퀴즈" className={s.full}>
-      {phase === 'result' ? (
-        <Result players={players} totals={totals} total={total} onExit={onExit} onAgain={onAgain} />
-      ) : (
-        <>
-          <div className={s.head}>
-            <span aria-hidden="true" />
-            <h2 className={s.title}>스피드 퀴즈</h2>
-            <button type="button" className={s.close} onClick={onExit} aria-label="그만하기">
-              <X size={22} strokeWidth={2.2} aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className={s.players} style={{ gridTemplateColumns: `repeat(${players.length}, minmax(0, 1fr))` }}>
-            {players.map((p) => {
-              const a = answers?.[p.id]
-              const mark = a ? (a.correct ? 'ok' : 'ng') : answered.includes(p.id) ? 'done' : null
-              return (
-                <div key={p.id} className={p.me ? `${s.pl} ${s.plMe}` : s.pl}>
-                  <Avatar person={p} size={34} mark={mark} />
-                  <span className={s.plName}>{p.name}</span>
-                  <span className={s.plScore}>{totals[p.id].pts}</span>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className={s.body}>
-            <div className={s.meta}>
-              <span>
-                {i + 1} / {total}
-              </span>
-              {phase === 'reveal' ? (
-                <span className={s.count} role="timer">
-                  {last ? '결과까지' : '다음 문제까지'} <b>{count}</b>초
-                </span>
-              ) : (
-                <span>{mine !== null ? '골랐어요' : `${seconds}초 안에 고르세요`}</span>
-              )}
+    <>
+      <Sheet open onClose={requestExit} showClose={false} closeOnDim={false} ariaLabel="스피드 퀴즈" className={s.full}>
+        {phase === 'result' ? (
+          <Result players={players} totals={totals} total={total} onExit={onExit} onAgain={onAgain} />
+        ) : (
+          <>
+            <div className={s.head}>
+              <span aria-hidden="true" />
+              <h2 className={s.title}>스피드 퀴즈</h2>
+              <button type="button" className={s.close} onClick={requestExit} aria-label="그만하기">
+                <X size={22} strokeWidth={2.2} aria-hidden="true" />
+              </button>
             </div>
-            {/* 시간 막대: 문제는 주황으로, 정답 화면은 회색으로 줄어든다(단계가 바뀌면 key로 새로 그린다) */}
-            <div
-              key={`${i}-${phase}`}
-              className={phase === 'reveal' ? `${s.timer} ${s.timerWait}` : s.timer}
-              style={{ '--limit': `${phase === 'reveal' ? revealSeconds : seconds}s` }}
-              aria-hidden="true"
-            >
-              <span />
-            </div>
-            <span className={s.subj}>{q.subject}</span>
-            <p className={s.qText}>{q.q}</p>
 
-            <div className={s.opts}>
-              {q.o.map((o, k) => {
-                let cls = s.opt
-                if (answers) {
-                  if (k === q.a) cls += ` ${s.optOk}`
-                  else if (answers.me.pick === k) cls += ` ${s.optNg}`
-                } else if (mine === k) cls += ` ${s.optPicked}`
-                const who = answers ? players.filter((p) => answers[p.id]?.pick === k) : []
+            <div className={s.players} style={{ gridTemplateColumns: `repeat(${players.length}, minmax(0, 1fr))` }}>
+              {players.map((p) => {
+                const a = answers?.[p.id]
+                const mark = a ? (a.correct ? 'ok' : 'ng') : answered.includes(p.id) ? 'done' : null
                 return (
-                  <button
-                    key={k}
-                    type="button"
-                    className={cls}
-                    disabled={phase !== 'ask' || mine !== null}
-                    onClick={(e) => pick(k, e.timeStamp)}
-                  >
-                    <span className={s.num}>{k + 1}</span>
-                    <span className={s.txt}>{o}</span>
-                    {who.length > 0 && (
-                      <span className={s.who}>
-                        {who.map((p) => (
-                          <Avatar key={p.id} person={p} size={22} />
-                        ))}
-                      </span>
-                    )}
-                  </button>
+                  <div key={p.id} className={p.me ? `${s.pl} ${s.plMe}` : s.pl}>
+                    <Avatar person={p} size={34} mark={mark} />
+                    <span className={s.plName}>{p.name}</span>
+                    <span className={s.plScore}>{totals[p.id].pts}</span>
+                  </div>
                 )
               })}
             </div>
 
-            {answers && (
-              <div className={s.reveal} role="status">
-                {[...players]
-                  .sort((a, b) => answers[b.id].pts - answers[a.id].pts)
-                  .map((p) => {
-                    const a = answers[p.id]
-                    const res = a.pick === null ? '시간 초과' : `${a.correct ? '정답' : '오답'} ${a.t.toFixed(1)}초`
-                    return (
-                      <div key={p.id} className={a.correct ? s.rv : `${s.rv} ${s.rvMiss}`}>
-                        <Avatar person={p} size={22} />
-                        <span className={s.rvName}>{p.name}</span>
-                        <span className={s.rvRes}>{res}</span>
-                        <span className={s.rvPts}>+{a.pts}</span>
-                      </div>
-                    )
-                  })}
+            <div className={s.body}>
+              <div className={s.meta}>
+                <span>
+                  {i + 1} / {total}
+                </span>
+                {phase === 'reveal' ? (
+                  <span className={s.count} role="timer">
+                    {last ? '결과까지' : '다음 문제까지'} <b>{count}</b>초
+                  </span>
+                ) : (
+                  <span>{mine !== null ? '골랐어요' : `${seconds}초 안에 고르세요`}</span>
+                )}
               </div>
-            )}
-          </div>
-        </>
-      )}
-    </Sheet>
+              {/* 시간 막대: 문제는 주황으로, 정답 화면은 회색으로 줄어든다(단계가 바뀌면 key로 새로 그린다) */}
+              <div
+                key={`${i}-${phase}`}
+                className={phase === 'reveal' ? `${s.timer} ${s.timerWait}` : s.timer}
+                style={{ '--limit': `${phase === 'reveal' ? revealSeconds : seconds}s` }}
+                aria-hidden="true"
+              >
+                <span />
+              </div>
+              <span className={s.subj}>{q.subject}</span>
+              <p className={s.qText}>{q.q}</p>
+
+              <div className={s.opts}>
+                {q.o.map((o, k) => {
+                  let cls = s.opt
+                  if (answers) {
+                    if (k === q.a) cls += ` ${s.optOk}`
+                    else if (answers.me.pick === k) cls += ` ${s.optNg}`
+                  } else if (mine === k) cls += ` ${s.optPicked}`
+                  const who = answers ? players.filter((p) => answers[p.id]?.pick === k) : []
+                  return (
+                    <button
+                      key={k}
+                      type="button"
+                      className={cls}
+                      disabled={phase !== 'ask' || mine !== null}
+                      onClick={(e) => pick(k, e.timeStamp)}
+                    >
+                      <span className={s.num}>{k + 1}</span>
+                      <span className={s.txt}>{o}</span>
+                      {who.length > 0 && (
+                        <span className={s.who}>
+                          {who.map((p) => (
+                            <Avatar key={p.id} person={p} size={22} />
+                          ))}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {answers && (
+                <div className={s.reveal} role="status">
+                  {[...players]
+                    .sort((a, b) => answers[b.id].pts - answers[a.id].pts)
+                    .map((p) => {
+                      const a = answers[p.id]
+                      const res = a.pick === null ? '시간 초과' : `${a.correct ? '정답' : '오답'} ${a.t.toFixed(1)}초`
+                      return (
+                        <div key={p.id} className={a.correct ? s.rv : `${s.rv} ${s.rvMiss}`}>
+                          <Avatar person={p} size={22} />
+                          <span className={s.rvName}>{p.name}</span>
+                          <span className={s.rvRes}>{res}</span>
+                          <span className={s.rvPts}>+{a.pts}</span>
+                        </div>
+                      )
+                    })}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </Sheet>
+      <QuitConfirm
+        open={askOpen}
+        text="지금 그만두면 이번 판은 여기서 끝나요. 이 창이 떠 있는 동안에도 시간은 흘러요."
+        onStay={() => setAskQuit(false)}
+        onQuit={onExit}
+      />
+    </>
   )
 }
 

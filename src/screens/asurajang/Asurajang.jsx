@@ -4,6 +4,7 @@ import { useUser } from '../../store/UserContext.jsx'
 import { getRound, saveResult } from '../../store/asurajang.js'
 import Sheet from '../../components/Sheet.jsx'
 import Button3D from '../../components/Button3D.jsx'
+import { useScreenBack } from '../../components/backStack.js'
 import {
   TICK_MS,
   countdownLeft,
@@ -107,6 +108,9 @@ export default function Asurajang({ goTo, goBack }) {
     }
     exitNow()
   }
+
+  // 휴대폰 뒤로 가기는 머리의 나가기 버튼과 같다(실전 판 도중이면 '지금 나갈까요?'를 먼저 묻는다)
+  useScreenBack(onExit)
 
   const toHome = () => goTo('lobby')
 

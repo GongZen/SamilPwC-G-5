@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
+import { useBackLayer } from './backStack.js'
 import s from './Sheet.module.css'
 
 // 시트 안에서 Tab으로 옮겨 다닐 수 있는 것들
@@ -19,6 +20,8 @@ function isTopSheet(box) {
 // 열리면 시트 안으로 초점을 옮기고(안에 autoFocus 입력란이 있으면 그대로 둔다), Tab은 시트 안에서만 돈다.
 // 닫히면 열기 전에 누른 버튼으로 초점을 돌려준다. 단, autoFocus 입력란이 있는 시트는 열 때 이미 초점이
 // 시트 안에 있어 누른 버튼을 알 수 없으므로 돌려주지 않는다(지금 그런 시트는 없다).
+// 휴대폰 뒤로 가기를 누르면 맨 위 시트의 onClose를 부른다(Esc, 닫기 버튼과 같다. backStack.js).
+// backClose={false}면 뒤로 가기에 반응하지 않는다(종료 확인 창: 한 번 더 뒤로 가면 앱이 닫혀야 한다).
 // surface: 'white' | 'bg'(옅은 회색)
 export default function Sheet({
   open,
@@ -29,9 +32,11 @@ export default function Sheet({
   surface = 'white',
   showClose = true,
   closeOnDim = true,
+  backClose = true,
   className = '',
 }) {
   const sheetRef = useRef(null)
+  useBackLayer(open && backClose, onClose)
 
   // Esc로 닫기. Tab은 시트 안에서만 돌게 한다.
   // 시트가 겹쳐 열려 있으면(예: 진도 계획 위의 할 일 입력 창) 맨 위 시트만 키를 받는다.
